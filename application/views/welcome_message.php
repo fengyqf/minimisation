@@ -73,10 +73,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div id="body">
     <ul>
     <li><a href="<?php echo site_url("/study/"); ?>">我的研究课题</a></li>
-    <li><a href="<?php echo site_url("/patient/"); ?>">我的病人</a></li>
-    <li><a href="<?php echo site_url("/patient/add"); ?>">添加病人</a></li>
-    <li><a href="<?php echo site_url("/patient/"); ?>">我的病人</a></li>
-    <li><a href="<?php echo site_url("/patient/"); ?>">我的病人</a></li>
+    <li><a href="<?php echo site_url("/facotr/"); ?>">因素</a></li>
+    <li><a href="<?php echo site_url("/layer/"); ?>">水平</a></li>
+    <li><a href="<?php echo site_url("/patient/"); ?>">Allocations</a></li>
+    <li><a href="<?php echo site_url("/patient/add"); ?>">Allocation Add</a></li>
     </ul>
     </div>
 
