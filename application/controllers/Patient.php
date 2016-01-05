@@ -326,13 +326,32 @@ class Patient extends CI_Controller {
 
 
     public function correct($patient_id){
-
+        $patient_id=(int)$patient_id;
         //检查 $patient_id对应的study是否是当前用户所有
-        //清理 $patient_id相关的数据记录
-
+        $this->db->select('s.id as study_id,s.owner_uid')
+                 ->from('patient2layer p2l')
+                 ->join('layer l','l.id=p2l.layer_id','inner')
+                 ->join('factor f','f.id=l.factor_id','inner')
+                 ->join('study s','s.id=f.study_id','inner')
+                 ->where('p2l.patient_id',$patient_id)
+                 ->where('s.owner_uid',$this->operate_user_id)
+                 ->limit(1);
+        $query=$this->db->get();
+        if($query->num_rows()>0){
+            //有相应记录，检查通过，做清理操作: p,p2l 两表
+            $this->db->delete('patient',array(
+                    'id'=>$patient_id
+                ));
+            var_dump($this->db->last_query());
+            $this->db->delete('patient2layer',array(
+                    'patient_id'=>$patient_id
+                ));
+            var_dump($this->db->last_query());
+        }
 
         redirect('patient/add');
     }
+
 
     private function dump_gl($gl_cnt,$width=10){
         $buff="\n<pre>\n";
