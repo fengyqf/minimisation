@@ -107,7 +107,7 @@ class Patient extends CI_Controller {
         $query=$this->db->get();
         $groups=array();
         foreach ($query->result_array() as $row) {
-            $groups[]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
+            $groups[$row['id']]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
         }
         //检测当前操作用户对几个factor的权限
         //TODOs
@@ -158,9 +158,9 @@ class Patient extends CI_Controller {
         foreach($query->result_array() as $row){
             $data_layers[$row['layer_id']]=array(
                 'layer_id' => $row['layer_id'],
-                //'layer_name' => $row['layer_name'],
+                'layer_name' => $row['layer_name'],
                 'factor_id' => $row['factor_id'],
-                //'factor_name' => $row['factor_name'],
+                'factor_name' => $row['factor_name'],
                 'factor_weight' => $row['factor_weight'],
                 );
         }
@@ -295,9 +295,43 @@ class Patient extends CI_Controller {
         $this->db->trans_complete();
         //$this->db->trans_rollback();
 
-        echo "<li><br>\n\n<br>aim_group_id: $aim_group_id</li>\n";
-        echo "<li><a href='".site_url('/patient/add')."'>Add a Next Patient</a></li>";
+        //echo "<li><br>\n\n<br>aim_group_id: $aim_group_id</li>\n";
+        //echo "<li><a href='".site_url('/patient/add')."'>Add a Next Patient</a></li>";
 
+        //输出一个简短报告：每个因素水平、目标组，及一些链接
+        $data=array();
+        //var_dump($factors);
+        foreach ($factors as $factor) {
+            $data['factors'][]=array(
+                    'factor_name'=>$data_layers[$factor]['factor_name'],
+                    'factor_id'=>$data_layers[$factor]['factor_id'],
+                    'layer_id'=>$data_layers[$factor]['layer_id'],
+                    'layer_name'=>$data_layers[$factor]['layer_name'],
+                    );
+        }
+        $data['aim_group']=array(
+                'group_id'=>$aim_group_id,
+                'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误',
+                );
+
+        $data['link']['add_new']=site_url('/patient/add');
+        $data['link']['correct']=site_url('/patient/correct/'.$new_patient_id);
+        $data['link']['view']=site_url('/patient');
+        //var_dump($data);
+
+        $this->load->view('patient/add_done',$data);
+
+
+    }
+
+
+    public function correct($patient_id){
+
+        //检查 $patient_id对应的study是否是当前用户所有
+        //清理 $patient_id相关的数据记录
+
+
+        redirect('patient/add');
     }
 
     private function dump_gl($gl_cnt,$width=10){
