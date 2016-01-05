@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div id="body">
       <form name="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
-		<div class="flash">必填项目不完整。</div>
+		<div class="flash"><?php echo $flash; ?></div>
 <?php } ?>
 		<fieldset>
 			<legend>各因素水平</legend>

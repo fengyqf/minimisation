@@ -36,6 +36,7 @@ class Patient extends CI_Controller {
 
     public function add(){
         $study_id=(int)($this->input->get('study_id'));
+        $flash=$this->input->get('flash');      //flash消息
         $study_id=2001;    //当前研究课题，测试阶段写死调试
 
         //当前study的factor, layer, 并归并存储到factor数组中
@@ -68,6 +69,7 @@ class Patient extends CI_Controller {
         $data['form_action']=site_url("/patient/add_do");
         $data['study_id']=$study_id;
         $data['factors']=$factors;
+        $data['flash']=$flash;
         $this->load->view('patient/add',$data);
     }
 
@@ -337,7 +339,8 @@ class Patient extends CI_Controller {
             var_dump($this->db->last_query());
         }
 
-        redirect('patient/add');
+        $flash='原Allocation已清理，请重新录入分配';
+        redirect('patient/add?flash='.$flash);
     }
 
 

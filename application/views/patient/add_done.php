@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<dt><hr></dt>
 				<dd></dd>
 				<dt></dt>
-				<dd><a href="<?php echo $link['correct']; ?>">如果以上内容录入有误，点此重录</a></dd>
+				<dd><a href="<?php echo $link['correct']; ?>">如果以上内容录入有误，点此清理并重录</a></dd>
 			</dl>
 		</fieldset>
 
