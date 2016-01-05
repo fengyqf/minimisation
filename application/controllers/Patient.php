@@ -26,6 +26,8 @@ class Patient extends CI_Controller {
         $this->load->database('default');
         $this->operate_user_id=7;
     }
+
+
     public function index(){
         //$this->load->view('welcome_message');
         echo 'welcome';
@@ -49,7 +51,6 @@ class Patient extends CI_Controller {
                 );
         }
 
-
         $this->db->select('f.id as factor_id,f.name as factor_name,f.study_id,l.id as layer_id, l.name as layer_name')
                  ->from('factor f')
                  ->join('layer l','f.id=l.factor_id','inner')
@@ -64,14 +65,12 @@ class Patient extends CI_Controller {
         }
         //var_dump($factors);
 
-
-
         $data['form_action']=site_url("/patient/add_do");
         $data['study_id']=$study_id;
         $data['factors']=$factors;
         $this->load->view('patient/add',$data);
-
     }
+
 
     public function add_do(){
         $study_id=(int)($this->input->post('study_id'));
@@ -118,7 +117,6 @@ class Patient extends CI_Controller {
         //.................
 
 
-
         //读当前study的几个factor对应的layer值的统计计数
         /*
         ----这个语句效率可能有点低，测试阶段先这样用。几个优化思路
@@ -134,9 +132,6 @@ class Patient extends CI_Controller {
         WHERE f.study_id=2001 and p2l.layer_id in(2,4,6)
         group by p.group_id,p2l.`layer_id`
         */
-
-
-
 
         //当前study相关的layer-factor数组，按layer_id查找查找对应factor的weight
         /*
@@ -164,8 +159,7 @@ class Patient extends CI_Controller {
                 'factor_weight' => $row['factor_weight'],
                 );
         }
-        $this->dump_gl($data_layers,20);
-
+        //$this->dump_gl($data_layers,20);
 
         $this->db->select('p.group_id,p2l.`layer_id`,count(p2l.`patient_id`) as cnt')
                  ->from('patient2layer p2l')
@@ -208,11 +202,11 @@ class Patient extends CI_Controller {
             }
         }
 
-        echo("\n------gl_cnt---------\n");
-        echo $this->dump_gl($gl_cnt);
+        //echo("\n------gl_cnt---------\n");
+        //echo $this->dump_gl($gl_cnt);
 
-        echo("\n------sd_test---------\n");
-        echo $this->dump_gl($sd_test,20);
+        //echo("\n------sd_test---------\n");
+        //echo $this->dump_gl($sd_test,20);
 
         $group_sum_sd=array();  //各组的sd加权和
         foreach ($sd_test as $group_id => $line) {
@@ -228,10 +222,8 @@ class Patient extends CI_Controller {
                 $group_sum_sd[$group_id]+=$weight*$sd;
             }
         }
-
-        var_dump($group_sum_sd);
-
-        $group_sum_sd_original=$group_sum_sd;
+        //var_dump($group_sum_sd);
+        //$group_sum_sd_original=$group_sum_sd;
 
         //$aim_group_id=NULL;目标组编号
         asort($group_sum_sd);
@@ -269,15 +261,17 @@ class Patient extends CI_Controller {
             }
         }else{
             //正常情况下，绝对不会到这里
-            die('Error: 严重错误（算法有误）');
+            die('Error: 严重错误（算法有误）A');
         }
 
+        if(!isset($aim_group_id)){
+            die('Error: 严重错误（算法有误）B');
+        }
         //结果
-        echo "<br>\n\n<br>aim_group_id: ".$aim_group_id;
+        //echo "<br>\n\n<br>aim_group_id: ".$aim_group_id;
 
         //数据入库
         $this->db->trans_start();
-        //$this->db->trans_begin();   //仅调试，并不插入数据
         $data=array('name'=>$patient_name,
                     'group_id'=>$aim_group_id,
                     'time'=>time(),
@@ -293,10 +287,6 @@ class Patient extends CI_Controller {
         $this->db->insert_batch('patient2layer',$data);
 
         $this->db->trans_complete();
-        //$this->db->trans_rollback();
-
-        //echo "<li><br>\n\n<br>aim_group_id: $aim_group_id</li>\n";
-        //echo "<li><a href='".site_url('/patient/add')."'>Add a Next Patient</a></li>";
 
         //输出一个简短报告：每个因素水平、目标组，及一些链接
         $data=array();
@@ -311,7 +301,7 @@ class Patient extends CI_Controller {
         }
         $data['aim_group']=array(
                 'group_id'=>$aim_group_id,
-                'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误',
+                'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
 
         $data['link']['add_new']=site_url('/patient/add');
@@ -320,8 +310,6 @@ class Patient extends CI_Controller {
         //var_dump($data);
 
         $this->load->view('patient/add_done',$data);
-
-
     }
 
 
@@ -375,8 +363,8 @@ class Patient extends CI_Controller {
         }
         $buff.="\n</pre>\n";
         echo($buff);
-
     }
+
 
      /**
       * This user-land implementation follows the implementation quite strictly;
