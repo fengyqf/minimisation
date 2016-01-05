@@ -238,7 +238,7 @@ class Patient extends CI_Controller {
         reset($group_sum_sd);
         $gs_m=each($group_sum_sd);  //group sum sd中最小值minimal
         $gs_n=each($group_sum_sd);  //group sum sd中次小值next
-        var_dump($gs_m,$gs_n);
+        //var_dump($gs_m,$gs_n);
         if($gs_m['value']==$gs_n['value']){
             //随机分配到所有最小值的组中
             //探测所有与$gs_m['value']相同的值, 将key存储到$minimal_keys[]中
@@ -257,7 +257,7 @@ class Patient extends CI_Controller {
                 reset($group_sum_sd);
                 $gs_m=each($group_sum_sd);  //group sum sd中最小值minimal
                 $gs_n=each($group_sum_sd);  //group sum sd中次小值next
-                var_dump($gs_m,$gs_n);
+                //var_dump($gs_m,$gs_n);
                 $rand_seed=rand(1,100);
                 if($rand_seed<$study_bias or !each($group_sum_sd) ){
                     $aim_group_id=$gs_m['key'];
@@ -267,8 +267,6 @@ class Patient extends CI_Controller {
                     $group_sum_sd=array_slice($group_sum_sd,1,NULL,true);
                 }
             }
-
-
         }else{
             //正常情况下，绝对不会到这里
             die('Error: 严重错误（算法有误）');
@@ -285,10 +283,7 @@ class Patient extends CI_Controller {
                     'time'=>time(),
             );
         $this->db->insert('patient',$data);
-        var_dump($this->db->last_query());
         $new_patient_id=$this->db->insert_id();
-        var_dump($this->db->last_query());
-        var_dump('new_patient_id: '.$new_patient_id);
         $data=array();
         foreach ($factors as $factor_id => $layer_id) {
             $data[]=array('patient_id'=>$new_patient_id,
@@ -296,7 +291,6 @@ class Patient extends CI_Controller {
                 );
         }
         $this->db->insert_batch('patient2layer',$data);
-        var_dump($this->db->last_query());
 
         $this->db->trans_complete();
         //$this->db->trans_rollback();
