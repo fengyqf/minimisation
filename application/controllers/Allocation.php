@@ -88,6 +88,7 @@ class Allocation extends CI_Controller {
             ->select('id,name,bias,group_count,owner_uid')
             ->from('study')
             ->where('owner_uid',$this->operate_user_id)
+            ->where('id',$study_id)
             ->limit(1);
         $query=$this->db->get();
         if($row=$query->row_array()){
