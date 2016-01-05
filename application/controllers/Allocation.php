@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Patient extends CI_Controller {
+class Allocation extends CI_Controller {
 
     /**
      * Index Page for this controller.
@@ -66,20 +66,20 @@ class Patient extends CI_Controller {
         }
         //var_dump($factors);
 
-        $data['form_action']=site_url("/patient/add_do");
+        $data['form_action']=site_url("/allocation/add_do");
         $data['study_id']=$study_id;
         $data['factors']=$factors;
         $data['flash']=$flash;
-        $this->load->view('patient/add',$data);
+        $this->load->view('allocation/add',$data);
     }
 
 
     public function add_do(){
         $study_id=(int)($this->input->post('study_id'));
-        $patient_name=$this->input->post('name');
-        if(!$patient_name){
+        $allocation_name=$this->input->post('name');
+        if(!$allocation_name){
             date_default_timezone_set('Asia/Shanghai');
-            $patient_name='Anonymous ('.date('YmdHis').')';
+            $allocation_name='Anonymous ('.date('YmdHis').')';
         }
         $factors=($this->input->post('factors'));
         //var_dump($factors);
@@ -126,11 +126,11 @@ class Patient extends CI_Controller {
          - 将相关数据读出并插入一张临时表中，再做统计
          - 忽略where对子句对f.study_id的判断(这是一个严谨的判断)
 
-        SELECT p.group_id,p2l.`layer_id`,count(p2l.`patient_id`) as cnt
-        FROM `mnms_patient2layer` p2l
+        SELECT p.group_id,p2l.`layer_id`,count(p2l.`allocation_id`) as cnt
+        FROM `mnms_allocation2layer` p2l
         INNER JOIN `mnms_layer` l ON l.`id` = p2l.`layer_id`
         INNER JOIN mnms_factor f ON f.id = l.factor_id
-        INNER JOIN mnms_patient p ON p.id = p2l.patient_id
+        INNER JOIN mnms_allocation p ON p.id = p2l.allocation_id
         WHERE f.study_id=2001 and p2l.layer_id in(2,4,6)
         group by p.group_id,p2l.`layer_id`
         */
@@ -163,11 +163,11 @@ class Patient extends CI_Controller {
         }
         //$this->dump_gl($data_layers,20);
 
-        $this->db->select('p.group_id,p2l.`layer_id`,count(p2l.`patient_id`) as cnt')
-                 ->from('patient2layer p2l')
+        $this->db->select('p.group_id,p2l.`layer_id`,count(p2l.`allocation_id`) as cnt')
+                 ->from('allocation2layer p2l')
                  ->join('layer l','l.id=p2l.layer_id','inner')
                  ->join('factor f','f.id=l.factor_id','inner')
-                 ->join('patient p','p.id=p2l.patient_id')
+                 ->join('allocation p','p.id=p2l.allocation_id')
                  ->where('f.study_id','2001')
                  ->where_in('p2l.layer_id',$factors)
                  ->group_by(array('p.group_id','p2l.`layer_id`'));
@@ -274,19 +274,19 @@ class Patient extends CI_Controller {
 
         //数据入库
         $this->db->trans_start();
-        $data=array('name'=>$patient_name,
+        $data=array('name'=>$allocation_name,
                     'group_id'=>$aim_group_id,
                     'time'=>time(),
             );
-        $this->db->insert('patient',$data);
-        $new_patient_id=$this->db->insert_id();
+        $this->db->insert('allocation',$data);
+        $new_allocation_id=$this->db->insert_id();
         $data=array();
         foreach ($factors as $factor_id => $layer_id) {
-            $data[]=array('patient_id'=>$new_patient_id,
+            $data[]=array('allocation_id'=>$new_allocation_id,
                       'layer_id'=>$layer_id,
                 );
         }
-        $this->db->insert_batch('patient2layer',$data);
+        $this->db->insert_batch('allocation2layer',$data);
 
         $this->db->trans_complete();
 
@@ -306,41 +306,41 @@ class Patient extends CI_Controller {
                 'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
 
-        $data['link']['add_new']=site_url('/patient/add');
-        $data['link']['correct']=site_url('/patient/correct/'.$new_patient_id);
-        $data['link']['view']=site_url('/patient');
+        $data['link']['add_new']=site_url('/allocation/add');
+        $data['link']['correct']=site_url('/allocation/correct/'.$new_allocation_id);
+        $data['link']['view']=site_url('/allocation');
         //var_dump($data);
 
-        $this->load->view('patient/add_done',$data);
+        $this->load->view('allocation/add_done',$data);
     }
 
 
-    public function correct($patient_id){
-        $patient_id=(int)$patient_id;
-        //检查 $patient_id对应的study是否是当前用户所有
+    public function correct($allocation_id){
+        $allocation_id=(int)$allocation_id;
+        //检查 $allocation_id对应的study是否是当前用户所有
         $this->db->select('s.id as study_id,s.owner_uid')
-                 ->from('patient2layer p2l')
+                 ->from('allocation2layer p2l')
                  ->join('layer l','l.id=p2l.layer_id','inner')
                  ->join('factor f','f.id=l.factor_id','inner')
                  ->join('study s','s.id=f.study_id','inner')
-                 ->where('p2l.patient_id',$patient_id)
+                 ->where('p2l.allocation_id',$allocation_id)
                  ->where('s.owner_uid',$this->operate_user_id)
                  ->limit(1);
         $query=$this->db->get();
         if($query->num_rows()>0){
             //有相应记录，检查通过，做清理操作: p,p2l 两表
-            $this->db->delete('patient',array(
-                    'id'=>$patient_id
+            $this->db->delete('allocation',array(
+                    'id'=>$allocation_id
                 ));
             var_dump($this->db->last_query());
-            $this->db->delete('patient2layer',array(
-                    'patient_id'=>$patient_id
+            $this->db->delete('allocation2layer',array(
+                    'allocation_id'=>$allocation_id
                 ));
             var_dump($this->db->last_query());
         }
 
         $flash='原Allocation已清理，请重新录入分配';
-        redirect('patient/add?flash='.$flash);
+        redirect('allocation/add?flash='.$flash);
     }
 
 
