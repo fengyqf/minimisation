@@ -20,12 +20,16 @@ $lang['g_study_name'] = "Study Name";
 
 $lang['submit'] = "Submit";
 $lang['edit'] = "Edit";
+$lang['delete'] = "Delete";
 
 
 //study
 $lang['groups_in_%s'] = "Groups in study <strong>%s</strong>";
 $lang['add_more_groups'] = "+ Add More";
-$lang['add_new_factor'] = "+ Add New Factor";
+$lang['add_new_factor'] = "Add New Factor";
+$lang['edit_factor'] = "Edit Factor";
 
 
+$lang['none_layers'] = "none layers";
+$lang['add_more_layers'] = "+ Add More";
 

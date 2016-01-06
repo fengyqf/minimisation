@@ -201,7 +201,7 @@ class Study extends CI_Controller {
         $data['item']=$study;
         $data['factors']=$data_factors;
         $data['links']['edit']=site_url("/study/edit?id".$study_id);
-        $data['links']['factors']=site_url("/study/factors?study_id".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
         $data['links']['view']=site_url("/study/");
         $data['links']['add']=site_url("/study/add");
         $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);

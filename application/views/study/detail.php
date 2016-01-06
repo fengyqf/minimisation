@@ -40,10 +40,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php foreach($factors as $item){ ?>
 					<dt><?php echo $item['factor_name']; ?> (<?php echo $item['weight']; ?>)</dt>
 					<dd>
-						<ul><?php 
-			foreach($item['layers'] as $it){ ?>
+						<ul><?php
+			if(isset($item['layers'])){
+				foreach($item['layers'] as $it){ ?>
 							<li><?php echo $it['layer_name']; ?></li>
-<?php 		}		?>
+<?php 			}
+			}else{
+		?>
+							<li><?php echo lang('none_layers');?></li>
+<?php		} ?>
 						</ul>
 					</dd>
 <?php } ?>
