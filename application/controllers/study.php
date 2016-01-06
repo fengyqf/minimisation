@@ -178,10 +178,14 @@ class Study extends CI_Controller {
                 //按上面带权限限定的查询结果，更新相应group_id对应的数据，
                 //  更新为POST['groups']中对应值，事实上仅group.name
                 if(isset($groups[$row['group_id']])){
-                    $this->db->where('id',$row['group_id'])
-                         ->update('group',array(
-                                'name'=>$groups[$row['group_id']]
-                                ));
+                    if($groups[$row['group_id']]){
+                        $this->db->where('id',$row['group_id'])
+                             ->update('group',array(
+                                    'name'=>$groups[$row['group_id']]
+                                    ));
+                    }else{
+                        $this->db->delete('group',array('id'=>$row['group_id']));
+                    }
                     //var_dump($groups,$group_new);
                 }
             }
