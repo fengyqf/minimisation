@@ -56,8 +56,10 @@ class Study extends CI_Controller {
         $query=$this->db->get();
         $studys=array();
         foreach($query->result_array() as $row){
+            $row['groups_link']=site_url('study/group?id='.$row['id']);
+            $row['detail_link']=site_url('study/'.$row['id']);
             $row['edit_link']=site_url('study/edit?id='.$row['id']);
-            $row['groups_link']=site_url('group/?study_id='.$row['id']);
+            $row['groups_link']=site_url('study/group?study_id='.$row['id']);
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
             $row['allocations_link']=site_url('allocation/?study_id='.$row['id']);
@@ -127,6 +129,89 @@ class Study extends CI_Controller {
     }
 
 
+    public function detail($id=NULL){
+        if(!$id=(int)$id){
+            redirect('study/');
+        }
+        $study_id=$id;
+        //注意检测当前操作用户是否有操作study_id的权限
+        $this->db
+            ->select('id,name,bias,group_count,owner_uid,from_unixtime(time) as time')
+            ->from('study')
+            ->where('id',$id)
+            ->where('owner_uid',$this->operate_user_id)
+            ->limit(1);
+        $query=$this->db->get();
+        $study=array();
+        if($row=$query->row_array()){
+            $row['groups_link']=site_url('study/group?id='.$row['id']);
+            $row['edit_link']=site_url('study/edit?id='.$row['id']);
+            $row['groups_link']=site_url('study/group?study_id='.$row['id']);
+            $row['factors_link']=site_url('factor/?study_id='.$row['id']);
+            $row['layers_link']=site_url('layer/?study_id='.$row['id']);
+            $row['allocations_link']=site_url('allocation/?study_id='.$row['id']);
+            $row['bias']=$row['bias']/100;
+            $study=$row;
+        }else{
+            redirect('study/');
+        }
+        $this->db->flush_cache();
+        $this->db->select('id,name')
+                 ->from('group')
+                 ->where('study_id',$study_id)
+                 ->order_by('id','asc');
+        $query=$this->db->get();
+        $groups=array();
+        foreach($query->result_array() as $row){
+            $groups[]=$row;
+        }
+        $data['groups']=$groups;
+
+        $data_factors=array();      //factor-layer两级数组
+        $factor_ids=array();        //factor_id一维数组
+        $this->db->select('id as factor_id,name as factor_name,weight')
+                 ->from('factor')
+                 ->where('study_id',$study_id)
+                 ->order_by('id','asc');
+        $query=$this->db->get();
+        foreach ($query->result_array() as $row) {
+            $data_factors[$row['factor_id']]=$row;
+            $factor_ids[]=$row['factor_id'];
+        }
+
+        //根据$factor_ids查询所有相关layer, 合并到data_factors里
+        if($factor_ids){
+            $this->db->select('id as layer_id,name as layer_name,factor_id')
+                     ->from('layer')
+                     ->where_in('factor_id',$factor_ids)
+                     ->order_by('id','asc');
+            $query=$this->db->get();
+            foreach ($query->result_array() as $row) {
+                //var_dump($row);
+                $data_factors[$row['factor_id']]['layers'][]=array(
+                        'layer_id'   => $row['layer_id'],
+                        'layer_name' => $row['layer_name'],
+                    );
+            }
+        }
+
+
+
+
+        $data['item']=$study;
+        $data['factors']=$data_factors;
+        $data['links']['edit']=site_url("/study/edit?id".$study_id);
+        $data['links']['factors']=site_url("/study/factors?study_id".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$id);
+        $this->load->view('study/detail',$data);
+
+        //$this->db->
+    }
+
+
     public function group(){
         $study_id=$this->input->get('study_id');
         //检测所有权限
@@ -184,7 +269,13 @@ class Study extends CI_Controller {
                                     'name'=>$groups[$row['group_id']]
                                     ));
                     }else{
+                        //TODO:这里的功能没有测试
                         $this->db->delete('group',array('id'=>$row['group_id']));
+                        //删除相关group的记录: a2l,a两表
+                        $this->db->join('allocation a','a2l.allocation_id=a.id','inner')
+                                 ->delete('allocation2layer a2l',array('a.group_id'=>$row['group_id']));
+                        var_dump($this->db->last_query());
+                        $this->db->delete('allocation',array('group_id'=>$row['group_id']));
                     }
                     //var_dump($groups,$group_new);
                 }

@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div id="body">
 		<ul class="grid">
 <?php foreach($studys as $item){ ?>
-		<li>
+		<li class="grid_item">
 		<dl>
 			<dt>ID</dt>
 			<dd><?php echo $item['id']; ?></dd>
@@ -23,12 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<dd><?php echo $item['name']; ?></dd>
 			<dt>Bias probability distribution</dt>
 			<dd><?php echo $item['bias']; ?></dd>
-			<dt>group_count</dt>
+			<dt>groups_count</dt>
 			<dd><a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo $item['group_count']; ?></a></dd>
 			<dt>add time</dt>
 			<dd><?php echo $item['time']; ?></dd>
 			<dt>actions</dt>
 			<dd class="action">
+				<a href="<?php echo $item['detail_link']; ?>" title="detail of this study">Detail</a>
 				<a href="<?php echo $item['edit_link']; ?>" title="edit this study">Edit</a>
 				<a href="<?php echo $item['factors_link']; ?>" title="view factors in this study">Factors</a>
 				<a href="<?php echo $item['layers_link']; ?>" title="view layers in this study">Layers</a>

@@ -19,11 +19,13 @@ $lang['g_study_name'] = "Study Name";
 
 
 $lang['submit'] = "Submit";
+$lang['edit'] = "Edit";
 
 
 //study
 $lang['groups_in_%s'] = "Groups in study <strong>%s</strong>";
 $lang['add_more_groups'] = "+ Add More";
+$lang['add_new_factor'] = "+ Add New Factor";
 
 
 

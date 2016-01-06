@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<li><input name="group_new[]" type="text" value=""> <span id="btn_add"><?php echo lang('add_more_groups'); ?></span></li>
 		<li><input name="group_new[]" type="text" value=""></li>
 		</ul>
-
+<div class="flash">TODO：此功能未测试：删除指定group时，同步删除allocation,allocation2layer数据</div>
 		<div class="box_btn">
 				<input type="submit" name="Submit" value="<?php echo lang('submit');?>">
 				<input type="hidden" name="study_id" value="<?php echo $study['id'];?>">
