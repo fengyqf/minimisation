@@ -17,15 +17,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<li class="grid_item">
 		<dl>
 			<dt>ID</dt>
-			<dd><?php echo $item['id']; ?></dd>
+			<dd><?php echo $study['id']; ?></dd>
 			<dt>name</dt>
-			<dd><?php echo $item['name']; ?></dd>
+			<dd><?php echo $study['name']; ?></dd>
 			<dt>Bias probability distribution</dt>
-			<dd><?php echo $item['bias']; ?></dd>
+			<dd><?php echo $study['bias']; ?></dd>
 			<dt>group_count</dt>
-			<dd><a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo $item['group_count']; ?></a></dd>
+			<dd><a href="<?php echo $study['groups_link']; ?>" title="view the groups"><?php echo $study['group_count']; ?></a></dd>
 			<dt>add time</dt>
-			<dd><?php echo $item['time']; ?></dd>
+			<dd><?php echo $study['time']; ?></dd>
 			<dt><?php echo lang('g_groups');?> <a href="<?php echo $links['groups_edit_link']; ?>" title="edit this study"><?php echo lang('edit');?></a></dt>
 			<dd>
 				<ol>
@@ -56,6 +56,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<dd></dd>
 				</dl>
 			</dd>
+			<dt><?php echo lang('allocations_count');?></dt>
+			<dd><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo $allocations_count; ?></a></dd>
 		</dl>
 		</li>
 		<li>

@@ -63,6 +63,7 @@ class Study extends CI_Controller {
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
             $row['allocations_link']=site_url('allocation/?study_id='.$row['id']);
+            $row['allocation_add_link']=site_url('allocation/add?study_id='.$row['id']);
             $row['bias']=$row['bias']/100;
             $studys[]=$row;
         }
@@ -162,8 +163,10 @@ class Study extends CI_Controller {
                  ->order_by('id','asc');
         $query=$this->db->get();
         $groups=array();
+        $group_ids=array();
         foreach($query->result_array() as $row){
             $groups[]=$row;
+            $group_ids[]=$row['id'];
         }
         $data['groups']=$groups;
 
@@ -195,11 +198,13 @@ class Study extends CI_Controller {
             }
         }
 
+        //allocation计数
+        $allocations_count=$this->db->where_in('group_id',$group_ids)
+                 ->count_all_results('allocation');
 
-
-
-        $data['item']=$study;
+        $data['study']=$study;
         $data['factors']=$data_factors;
+        $data['allocations_count']=$allocations_count;
         $data['links']['edit']=site_url("/study/edit?id".$study_id);
         $data['links']['factors']=site_url("factor/?study_id=".$study_id);
         $data['links']['view']=site_url("/study/");

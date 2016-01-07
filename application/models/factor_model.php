@@ -30,6 +30,8 @@ class Factor_model extends CI_Model {
         $study_id=$factor_id=0;
         if(isset($hay['study_id'])){
             $study_id=(int)$hay['study_id'];
+        }elseif(is_numeric($hay)){
+            $study_id=(int)$hay;
         }elseif(isset($hay['factor_id'])){
             $factor_id=(int)$hay['factor_id'];
         }elseif(isset($hay['id'])){

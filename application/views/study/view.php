@@ -25,15 +25,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<dd><?php echo $item['bias']; ?></dd>
 			<dt>groups_count</dt>
 			<dd><a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo $item['group_count']; ?></a></dd>
-			<dt>add time</dt>
-			<dd><?php echo $item['time']; ?></dd>
+			<dt>groups_count</dt>
+			<dd><a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo $item['group_count']; ?></a></dd>
+			<dt>Allocations</dt>
+			<dd><?php echo $item['allocations_link']; ?></dd>
 			<dt>actions</dt>
 			<dd class="action">
 				<a href="<?php echo $item['detail_link']; ?>" title="detail of this study">Detail</a>
 				<a href="<?php echo $item['edit_link']; ?>" title="edit this study">Edit</a>
+				<a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo lang('g_groups'); ?></a>
 				<a href="<?php echo $item['factors_link']; ?>" title="view factors in this study">Factors</a>
 				<a href="<?php echo $item['layers_link']; ?>" title="view layers in this study">Layers</a>
 				<a href="<?php echo $item['allocations_link']; ?>" title="view allocations in this study">Allocations</a>
+				<a href="<?php echo $item['allocation_add_link']; ?>" title="view allocations in this study">Allocation Add</a>
 				<a href="<?php echo $item['edit_link']; ?>" title="edit this study">Edit</a>
 			</dd>
 		</dl>

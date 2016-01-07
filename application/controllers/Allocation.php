@@ -24,6 +24,7 @@ class Allocation extends CI_Controller {
 
         //当前操作的用户，可以挂接任何用户系统
         $this->load->database('default');
+        $this->lang->load('common');
         $this->operate_user_id=7;
     }
 
@@ -37,8 +38,14 @@ class Allocation extends CI_Controller {
     public function add(){
         $study_id=(int)($this->input->get('study_id'));
         $flash=$this->input->get('flash');      //flash消息
-        $study_id=2001;    //当前研究课题，测试阶段写死调试
-
+        //$study_id=2001;    //当前研究课题，测试阶段写死调试
+        //检测权限
+        $this->load->model('study_model');
+        $study=$this->study_model->get($study_id);
+        var_dump($study);
+        if($this->operate_user_id!=$study['owner_uid']){
+            redirect('study/');
+        }
         //当前study的factor, layer, 并归并存储到factor数组中
         $factors=array();
         $this->db->select('id,name')
@@ -48,14 +55,15 @@ class Allocation extends CI_Controller {
         foreach($query->result_array() as $row){
             $factors[$row['id']]=array(
                 'factor_id' => $row['id'],
-                'factor_name' => $row['name']
+                'factor_name' => $row['name'],
+                'layers' => array(),
                 );
         }
 
         $this->db->select('f.id as factor_id,f.name as factor_name,f.study_id,l.id as layer_id, l.name as layer_name')
                  ->from('factor f')
                  ->join('layer l','f.id=l.factor_id','inner')
-                 ->where('f.study_id','2001');
+                 ->where('f.study_id',$study_id);
         $query=$this->db->get();
         //var_dump($this->db->last_query());
         foreach($query->result_array() as $row){
@@ -65,6 +73,25 @@ class Allocation extends CI_Controller {
                 );
         }
         //var_dump($factors);
+        //检测factor及layer的完整性，不完整则显示flash消息
+        if(count($factors)<2){
+            if($flash){
+                $flash.='<br>'.lang('mesg_factors_not_enough');
+            }else{
+                $flash=lang('mesg_factors_not_enough');
+            }
+        }
+        foreach ($factors as $factor) {
+            if(!isset($factor['layers']) or count($factor['layers'])<=2){
+                $mesg=sprintf(lang('mesg_layers_not_enough_in_%s'),$factor['factor_name']);
+                 if($flash){
+                    $flash.='<br>'.$mesg;
+                }else{
+                    $flash=$mesg;
+                }
+            }
+        }
+
 
         $data['form_action']=site_url("/allocation/add_do");
         $data['study_id']=$study_id;
@@ -169,7 +196,7 @@ class Allocation extends CI_Controller {
                  ->join('layer l','l.id=p2l.layer_id','inner')
                  ->join('factor f','f.id=l.factor_id','inner')
                  ->join('allocation p','p.id=p2l.allocation_id')
-                 ->where('f.study_id','2001')
+                 ->where('f.study_id',$study_id)
                  ->where_in('p2l.layer_id',$factors)
                  ->group_by(array('p.group_id','p2l.`layer_id`'));
         $query=$this->db->get();
@@ -307,7 +334,7 @@ class Allocation extends CI_Controller {
                 'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
 
-        $data['link']['add_new']=site_url('/allocation/add');
+        $data['link']['add_new']=site_url('/allocation/add?study_id'.$study_id);
         $data['link']['correct']=site_url('/allocation/correct/'.$new_allocation_id);
         $data['link']['view']=site_url('/allocation');
         //var_dump($data);
