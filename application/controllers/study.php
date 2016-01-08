@@ -145,7 +145,6 @@ class Study extends CI_Controller {
         $query=$this->db->get();
         $study=array();
         if($row=$query->row_array()){
-            $row['groups_link']=site_url('study/group?id='.$row['id']);
             $row['edit_link']=site_url('study/edit?id='.$row['id']);
             $row['groups_link']=site_url('study/group?study_id='.$row['id']);
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);

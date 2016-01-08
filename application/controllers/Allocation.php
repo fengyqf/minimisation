@@ -30,8 +30,46 @@ class Allocation extends CI_Controller {
 
 
     public function index(){
-        //$this->load->view('welcome_message');
-        echo 'welcome';
+        $study_id=(int)($this->input->get('study_id'));
+        //检测权限
+        $this->load->model('study_model');
+        $study=$this->study_model->get($study_id);
+        if($this->operate_user_id!=$study['owner_uid']){
+            redirect('study/');
+        }
+
+        $this->db
+            ->select('id,name')
+            ->from('group')
+            ->where('study_id',$study_id);
+        $query=$this->db->get();
+        $groups=array();
+        foreach ($query->result_array() as $row) {
+            $groups[$row['id']]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
+        }
+        //var_dump($groups);
+
+        $this->load->model('factor_model');
+        $factors=$this->factor_model->get(array('study_id'=>$study_id),TRUE);
+        foreach ($factors as $key => $value) {
+            unset($factors[$key]['layers_link']);
+            unset($factors[$key]['del_link']);
+            unset($factors[$key]['edit_link']);
+        }
+        //var_dump($factors);
+        //die();
+
+        $study['groups_link']=site_url('study/group?study_id='.$study['id']);
+        $study['factors_link']=site_url('factor/?study_id='.$study['id']);
+        $study['layers_link']=site_url('layer/?study_id='.$study['id']);
+        $study['detail_link']=site_url('study/'.$study['id']);
+        $study['edit_link']=site_url('study/edit?id='.$study['id']);
+        $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
+        $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
+        $data['study']=$study;
+        $data['factors']=$factors;
+        $data['groups']=$groups;
+        $this->load->view('allocation/view',$data);
     }
 
 

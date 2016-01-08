@@ -26,16 +26,16 @@ class Factor_model extends CI_Model {
     }
 
 
-    public function get($hay=NULL){
+    /** 所读取指定study_id下的所有factor-layer的层级数据
+            如果指定allocation_statistic参数，再增加每个layer计数
+                即 self::get() 与 self:: allocation_statistic() 的组合
+    */
+    public function get($hay=NULL,$allocation_statistic=FALSE){
         $study_id=$factor_id=0;
         if(isset($hay['study_id'])){
             $study_id=(int)$hay['study_id'];
-        }elseif(is_numeric($hay)){
-            $study_id=(int)$hay;
         }elseif(isset($hay['factor_id'])){
             $factor_id=(int)$hay['factor_id'];
-        }elseif(isset($hay['id'])){
-            $factor_id=(int)$hay['id'];
         }else{
             return NULL;
         }
@@ -56,11 +56,19 @@ class Factor_model extends CI_Model {
             $row['layers_link']=site_url('factor/layer?factor_id='.$row['factor_id']);
             $row['del_link']=site_url('factor/del/'.$row['factor_id']);
             $row['edit_link']=site_url('factor/edit/'.$row['factor_id']);
+            $row['layers']=array();
             $data_factors[$row['factor_id']]=$row;
             $factor_ids[]=$row['factor_id'];
         }
 
         //根据$factor_ids查询所有相关layer, 合并到data_factors里
+        if($allocation_statistic){
+            $gl_cnt=$this->allocation_statistic($study_id);
+            //var_dump($gl_cnt);
+            $group_ids=array_keys($gl_cnt);
+            //var_dump($group_ids);
+        }
+
         if($factor_ids){
             $this->db->select('id as layer_id,name as layer_name,factor_id')
                      ->from('layer')
@@ -69,15 +77,42 @@ class Factor_model extends CI_Model {
             $query=$this->db->get();
             foreach ($query->result_array() as $row) {
                 //var_dump($row);
-                $data_factors[$row['factor_id']]['layers'][]=array(
-                        'layer_id'   => $row['layer_id'],
-                        'layer_name' => $row['layer_name'],
-                    );
+                $tmp['layer_id']   = $row['layer_id'];
+                $tmp['layer_name'] = $row['layer_name'];
+                if($allocation_statistic){
+                    foreach ($group_ids as $group_id) {
+                        $tmp['group_cnt'][$group_id]=
+                            isset($gl_cnt[$group_id][$row['layer_id']])
+                                ? $gl_cnt[$group_id][$row['layer_id']] : 0 ;
+                    }
+                }
+                $data_factors[$row['factor_id']]['layers'][]=$tmp;
             }
         }
 
         return $data_factors;
+    }
 
+
+    /** 统计指定study_id下所有layer的计数，存储到层级数组中
+            两维： array[group_id][layer_id]
+            计数为0的kayer_id可能没有相应数据，故使用时要先判断存在性
+    */
+    public function allocation_statistic($study_id){
+        $this->db->select('p.group_id,p2l.`layer_id`,count(p2l.`allocation_id`) as cnt')
+                 ->from('allocation2layer p2l')
+                 ->join('layer l','l.id=p2l.layer_id','inner')
+                 ->join('factor f','f.id=l.factor_id','inner')
+                 ->join('allocation p','p.id=p2l.allocation_id')
+                 ->where('f.study_id',$study_id)
+                 ->group_by(array('p.group_id','p2l.`layer_id`'));
+        $query=$this->db->get();
+        $gl_cnt=array();
+        foreach($query->result_array() as $row){
+            //var_dump($row);
+            $gl_cnt[$row['group_id']][$row['layer_id']]=(int)$row['cnt'];
+        }
+        return $gl_cnt;
     }
 
 }
