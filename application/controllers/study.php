@@ -43,6 +43,7 @@ class Study extends CI_Controller {
             $this->study_id=0;
         }
         $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
+        $this->data['site_name']=$this->config->item('site_name');
     }
 
 
@@ -71,7 +72,7 @@ class Study extends CI_Controller {
         //var_dump($studys);
         $data['studys']=$studys;
         $data['links']['add']=site_url("/study/add");
-        $data['bootstrap']=$this->data['bootstrap'];
+        $data=array_merge($this->data,$data);
         $this->load->view('study/view',$data);
     }
 
@@ -94,7 +95,7 @@ class Study extends CI_Controller {
         //var_dump($studys);
         $data['study']=$study;
         $data['form_action']=site_url("/study/add_do");
-        $data['bootstrap']=$this->data['bootstrap'];
+        $data=array_merge($this->data,$data);
         $this->load->view('study/add',$data);
     }
 
@@ -213,7 +214,7 @@ class Study extends CI_Controller {
         $data['links']['add']=site_url("/study/add");
         $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
         $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$id);
-        $data['bootstrap']=$this->data['bootstrap'];
+        $data=array_merge($this->data,$data);
         $this->load->view('study/detail',$data);
 
         //$this->db->
@@ -244,7 +245,7 @@ class Study extends CI_Controller {
             $data['groups']=$groups;
             $data['study']=$study;
             $data['form_action']=site_url('study/group_save');
-            $data['bootstrap']=$this->data['bootstrap'];
+            $data=array_merge($this->data,$data);
             //var_dump($data);
             $this->load->view('study/group',$data);
         }else{

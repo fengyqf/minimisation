@@ -513,4 +513,5 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
+$config['site_name'] = 'Minimisation';
 $config['default_bias'] = 0.8;

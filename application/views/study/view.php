@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <?php echo $bootstrap; ?>
-<title>Welcome to CodeIgniter</title>
+<title>All Studies - <?php echo $site_name;?></title>
 </head>
 <body>
 

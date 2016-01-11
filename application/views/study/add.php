@@ -1,18 +1,32 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-<html lang="zh-ch">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>Study Add</title>
-<link type="text/css" rel="stylesheet" href="<?php echo base_url('static'); ?>/style.css" />
+<?php echo $bootstrap; ?>
+<title>Study Add - <?php echo $site_name;?></title>
 </head>
 <body>
 
 <div id="container">
-    <h1>Study Add</h1>
 
-    <div id="body">
+	<ol class="breadcrumb">
+	  <li><a href="<?php echo site_url("/"); ?>">Home</a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>">试验项目</a></li>
+	  <li class="active">添加新项目</li>
+	</ol>
+
+<?php if(isset($flash) and $flash){ ?>
+	<div class="alert alert-warning" role="alert"><?php echo $flash; ?></div>
+<?php } ?>
+
+	<ul class="nav nav-tabs">
+	  <li role="presentation" class="active"><a href="#">Settings</a></li>
+	  <li role="presentation" class="disabled"><a href="#">Profile</a></li>
+	  <li role="presentation" class="disabled"><a href="#">Messages</a></li>
+	</ul>
+
       <form name="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
 		<div class="flash"><?php echo $flash; ?></div>
@@ -50,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<input type="submit" name="Submit" value="<?php echo lang('submit');?>">
 		</div>
       </form>
-    </div>
+
 
 
 </div>
