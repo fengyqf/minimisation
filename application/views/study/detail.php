@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <h1><?php echo $study['name']; ?></h1>
 	<ul class="nav nav-tabs">
-	  <li role="presentation" class="active disabled"><a href="#">Details</a></li>
+	  <li role="presentation" class="active disabled"><a href="<?php echo $links['detail_link']; ?>">Details</a></li>
 	  <li role="presentation"><a href="<?php echo $links['edit']; ?>">Setting</a></li>
 	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>">Groups</a></li>
 	  <li role="presentation"><a href="<?php echo $links['factors']; ?>">Factors</a></li>
