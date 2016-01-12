@@ -60,7 +60,7 @@ class Study extends CI_Controller {
         foreach($query->result_array() as $row){
             $row['groups_link']=site_url('study/group?id='.$row['id']);
             $row['detail_link']=site_url('study/'.$row['id']);
-            $row['edit_link']=site_url('study/edit?id='.$row['id']);
+            $row['edit_link']=site_url('study/edit/'.$row['id']);
             $row['groups_link']=site_url('study/group?study_id='.$row['id']);
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
@@ -77,24 +77,44 @@ class Study extends CI_Controller {
     }
 
 
-    public function edit($hay=NULL){
-        $edit_id=0;
+    public function _edit($hay=NULL){
         $default_data=NULL;
         if(is_numeric($hay)){
             $edit_id=(int)$hay;
         }elseif(is_array($hay)){
             $default_data=$hay;
         }
-        $study=array(
-            'id'=>$edit_id,
-            'name'=>isset($default_data['name']) ? $default_data['name'] : '' ,
-            'bias'=>isset($default_data['bias']) ? $default_data['bias'] : '0.8',
-            'group_count'=>isset($default_data['group_count']) ? $default_data['group_count'] : 2,
-            'group'=>array(),
-            );
-        //var_dump($studys);
+
+        if(isset($edit_id) && $edit_id > 0) {
+            $this->load->model('study_model');
+            $study=$this->study_model->get($edit_id);
+        }else{
+            $study=array(
+                'id'=>$edit_id,
+                'name'=>isset($default_data['name']) ? $default_data['name'] : '' ,
+                'bias'=>isset($default_data['bias']) ? $default_data['bias'] : '0.8',
+                'group_count'=>isset($default_data['group_count']) ? $default_data['group_count'] : 2,
+                );
+        }
+
+        if(!isset($study['study_id'])){
+            $study['study_id']=$study['id'];
+        }
+        if(!isset($study['groups'])){
+            $study['groups']=array();
+        }
         $data['study']=$study;
         $data['form_action']=site_url("/study/add_do");
+
+        $study_id=$study['id'];
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+
         $data=array_merge($this->data,$data);
         $this->load->view('study/add',$data);
     }
@@ -105,13 +125,27 @@ class Study extends CI_Controller {
     }
 
 
+    public function edit($study_id=NULL){
+        if(!$study_id){
+            $study_id=$this->input->get('id');
+        }
+        if(!$study_id=(int)$study_id){
+            redirect('study/');
+        }
+        $this->_edit($study_id);
+    }
+
+
     public function add_do(){
         //
         $bias=$this->input->post('bias') * 100;
+        $name=$this->input->post('name');
+        var_dump($bias);
         if($bias<=0){
             $bias=$this->config->item('default_bias');
         }
         $data=array(
+            'name'=>$name,
             'bias'=>$bias,
             'time'=>time(),
             'owner_uid'=>$this->operate_user_id,
@@ -121,16 +155,22 @@ class Study extends CI_Controller {
             //insert
             $this->db->insert('study',$data);
             $id=$this->db->insert_id();
+            //重定向到group管理中
+            redirect('study/group?study_id='.$id);
         }else{
             //update
             //验证该id所有者是当前用户
-            $this->db->where('id',$id)
-                     ->where('owner_uid',$this->operate_user_id);
-            $this->db->update('study',$data);
+            $this->load->model('study_model');
+            $study=$this->study_model->get($id);
+            if(isset($study['owner_uid']) && $study['owner_uid']==$this->operate_user_id){
+                unset($data['owner_uid']);
+                $this->db->where('id',$id)
+                         ->where('owner_uid',$this->operate_user_id);
+                $this->db->update('study',$data);
+                redirect('study/'.$id);
+            }
         }
-
-        //重定向到group管理中
-        redirect('study/group?study_id='.$id);
+        redirect('study/');
     }
 
 
@@ -149,7 +189,7 @@ class Study extends CI_Controller {
         $query=$this->db->get();
         $study=array();
         if($row=$query->row_array()){
-            $row['edit_link']=site_url('study/edit?id='.$row['id']);
+            $row['edit_link']=site_url('study/edit/'.$row['id']);
             $row['groups_link']=site_url('study/group?study_id='.$row['id']);
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
@@ -208,13 +248,13 @@ class Study extends CI_Controller {
         $data['study']=$study;
         $data['factors']=$data_factors;
         $data['allocations_count']=$allocations_count;
-        $data['links']['edit']=site_url("/study/edit?id=".$study_id);
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
         $data['links']['detail_link']=site_url("/study/".$study_id);
         $data['links']['factors']=site_url("factor/?study_id=".$study_id);
         $data['links']['view']=site_url("/study/");
         $data['links']['add']=site_url("/study/add");
         $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
-        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
         $data=array_merge($this->data,$data);
         $this->load->view('study/detail',$data);
 

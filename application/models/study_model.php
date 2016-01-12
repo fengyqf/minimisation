@@ -36,6 +36,7 @@ class Study_model extends CI_Model {
         $query=$this->db->get();
         $study=array();
         if($row=$query->row_array()){
+            $row['bias']=$row['bias']/100;
             $study=$row;
         }
         return $study;
