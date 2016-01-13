@@ -36,6 +36,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <li role="presentation" class="disabled"><a href="#">Balance</a></li>
 	</ul>
 
+	<div class="panel panel-default">
+	  <div class="panel-heading"><?php echo sprintf(lang('groups_in_%s'),$study['name']);?></div>
+	  <div class="panel-body">
 
       <form name="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
@@ -55,6 +58,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<input type="hidden" name="study_id" value="<?php echo $study['id'];?>">
 		</div>
       </form>
+	  </div>
+	</div>
 
 
 

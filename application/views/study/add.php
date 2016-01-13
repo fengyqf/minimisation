@@ -53,6 +53,8 @@ if($study['study_id']==0){
 <?php
 }
 ?>
+	<div class="panel panel-default">
+	  <div class="panel-heading"><?php echo lang('settings');?></div>
       <form name="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
 		<div class="flash"><?php echo $flash; ?></div>
@@ -93,7 +95,7 @@ if($study['study_id']==0){
 		        <input name="id" type="hidden" id="id" value="<?php echo $study['id'];?>">
 		</div>
       </form>
-
+	</div>
 
 
 </div>

@@ -87,6 +87,13 @@ class Factor extends CI_Controller {
             $data['factor']=$factor;
             $data['study']=$study;
             $data['form_action']=site_url('factor/edit_save');
+            $data['links']['edit']=site_url("/study/edit/".$study_id);
+            $data['links']['detail_link']=site_url("/study/".$study_id);
+            $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+            $data['links']['view']=site_url("/study/");
+            $data['links']['add']=site_url("/study/add");
+            $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+            $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
             $data=array_merge($this->data,$data);
             $this->load->view('factor/edit',$data);
         }else{
@@ -116,7 +123,8 @@ class Factor extends CI_Controller {
                 'name'=>$name,
                 'weight'=>$weight,
                 ));
-            redirect('factor/?study_id='.$study_id);
+            $factor_id=$this->db->insert_id();
+            redirect('factor/?factor_id='.$factor_id);
         }
 
     }
@@ -197,11 +205,33 @@ class Factor extends CI_Controller {
         foreach ($query->result_array() as $row) {
             $layers[]=$row;
         }
-        $data['layers']=$layers;
-        $data['factor_id']=$factor_id;
-        $data['form_action']=site_url('factor/layer_save');
-        $data=array_merge($this->data,$data);
-        $this->load->view('factor/layer',$data);
+        //检查所有权
+        $this->db->select('s.id,s.name,f.name as factor_name')
+                 ->from('factor f')
+                 ->join('study s','f.study_id=s.id','inner')
+                 ->where('f.id',$factor_id)
+                 ->where('s.owner_uid',$this->operate_user_id)
+                 ->limit(1);
+        $query=$this->db->get();
+        if($row=$query->row_array()){
+            $study_id=$row['id'];
+            $data['study']=$row;
+            $data['factor']=array('id'=>$factor_id,'name'=>$row['factor_name']);
+            $data['layers']=$layers;
+            $data['factor_id']=$factor_id;
+            $data['form_action']=site_url('factor/layer_save');
+            $data['links']['edit']=site_url("study/edit/".$study_id);
+            $data['links']['detail_link']=site_url("/study/".$study_id);
+            $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+            $data['links']['view']=site_url("/study/");
+            $data['links']['add']=site_url("/study/add");
+            $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+            $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+            $data=array_merge($this->data,$data);
+            $this->load->view('factor/layer',$data);
+        }else{
+            redirect('study/');
+        }
     }
 
 

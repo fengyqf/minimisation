@@ -32,6 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="alert alert-warning" role="alert"><?php echo $flash; ?></div>
 <?php } ?>
 
+<?php if(count($factors)>0){ ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><?php echo lang('current_factor_and_layers');?></div>
 	  <div class="panel-body">
@@ -70,23 +71,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</table>
 	  </div>
 	</div>
-
+<?php } ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><?php echo lang('add_new_factor');?></div>
-		<fieldset>
-			 <form name="form1" method="post" action="<?php echo $form_add_action;?>">
+		 <form name="form1" method="post" action="<?php echo $form_add_action;?>">
 			<dl>
 				<dt>Factor Name</dt>
 				<dd><input name="name" type="text" value=""></dd>
 				<dt>Weight</dt>
-				<dd><input name="weight" type="text" value="">(number)</dd>
+				<dd><input name="weight" type="text" value="">(numeric)</dd>
 				<dt></dt>
 				<dd><input type="submit" name="Submit" value="<?php echo lang('submit');?>">
 				<input name="study_id" type="hidden" value="<?php echo $study['id'];?>"></dd>
-			
 			</dl>
-		 	</form>
-		</fieldset>
+		</form>
 	</div>
 
 

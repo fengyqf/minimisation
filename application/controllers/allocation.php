@@ -372,7 +372,7 @@ class Allocation extends CI_Controller {
                 'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
 
-        $data['link']['add_new']=site_url('/allocation/add?study_id'.$study_id);
+        $data['link']['add_new']=site_url('/allocation/add?study_id='.$study_id);
         $data['link']['correct']=site_url('/allocation/correct/'.$new_allocation_id);
         $data['link']['view']=site_url('/allocation');
         //var_dump($data);
