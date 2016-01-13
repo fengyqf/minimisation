@@ -22,10 +22,12 @@ class Factor extends CI_Controller {
         parent::__construct();
 
         //当前操作的用户，可以挂接任何用户系统
-        $this->load->database('default');
         $this->operate_user_id=7;
+        $this->load->database('default');
         $this->lang->load('common');
 
+        $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
+        $this->data['site_name']=$this->config->item('site_name');
     }
 
 
@@ -55,6 +57,14 @@ class Factor extends CI_Controller {
         $data['factors']=$factors;
         $data['form_add_action']=site_url('factor/add_do?study_id='.$study_id);
         $data['form_edit_action']=site_url('factor/add_do?study_id='.$study_id);
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+        $data=array_merge($this->data,$data);
         $this->load->view('factor/view',$data);
     }
 
@@ -77,6 +87,7 @@ class Factor extends CI_Controller {
             $data['factor']=$factor;
             $data['study']=$study;
             $data['form_action']=site_url('factor/edit_save');
+            $data=array_merge($this->data,$data);
             $this->load->view('factor/edit',$data);
         }else{
             //redirect('study/');
@@ -189,6 +200,7 @@ class Factor extends CI_Controller {
         $data['layers']=$layers;
         $data['factor_id']=$factor_id;
         $data['form_action']=site_url('factor/layer_save');
+        $data=array_merge($this->data,$data);
         $this->load->view('factor/layer',$data);
     }
 

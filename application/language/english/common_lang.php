@@ -21,12 +21,13 @@ $lang['g_study_name'] = "Study Name";
 $lang['submit'] = "Submit";
 $lang['edit'] = "Edit";
 $lang['delete'] = "Delete";
+$lang['operate']='Operate';
+$lang['weight']='Weight';
 
 
 //study
 //$lang['groups_in_%s'] = "Groups in study <strong>%s</strong>";
 $lang['add_more_groups'] = "+ Add More";
-$lang['add_new_factor'] = "Add New Factor";
 $lang['edit_factor'] = "Edit Factor";
 
 
@@ -41,3 +42,11 @@ $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>'
 
 $lang['text_study_group_notice']='input all the groups below, each in one box; blank box will be ignored.
     <br>to delete a group, just delete it and submit.';
+
+//factor
+$lang['factor_name']='Factor Name';
+$lang['current_factor_and_layers']='Current Factors and Layers';
+$lang['text_no_layer_notice']='None, check Edit to set';
+$lang['text_factor_delete_confirm_notice']='Layers in this Factor and the Allocations will LOST, Are You Sure Delete It?';
+$lang['add_new_factor'] = "Add New Factor";
+

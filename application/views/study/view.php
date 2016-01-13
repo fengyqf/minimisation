@@ -58,7 +58,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</tr>
 <?php } ?>
 		  </tbody>
-		  </tbody>
 		</table>
 	</div>
 
