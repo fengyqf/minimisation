@@ -270,33 +270,36 @@ class Study extends CI_Controller {
     public function group(){
         $study_id=$this->input->get('study_id');
         //检测所有权限
-        $this->db
-            ->select('id,name,from_unixtime(time) as time')
-            ->from('study')
-            ->where('owner_uid',$this->operate_user_id)
-            ->order_by('id','desc');
-        $query=$this->db->get();
-        if($study=$query->row_array()){
-            //读取group列表
-            $this->db->flush_cache();
-            $this->db->select('id,name')
-                     ->from('group')
-                     ->where('study_id',$study_id)
-                     ->order_by('id','asc');
-            $query=$this->db->get();
-            $groups=array();
-            foreach($query->result_array() as $row){
-                $groups[]=$row;
-            }
-            $data['groups']=$groups;
-            $data['study']=$study;
-            $data['form_action']=site_url('study/group_save');
-            $data=array_merge($this->data,$data);
-            //var_dump($data);
-            $this->load->view('study/group',$data);
-        }else{
+        $this->load->model('study_model');
+        $study=$this->study_model->get($study_id);
+        if($study['owner_uid'] != $this->operate_user_id){
             redirect('study/');
         }
+        //读取group列表
+        $this->db->flush_cache();
+        $this->db->select('id,name')
+                 ->from('group')
+                 ->where('study_id',$study_id)
+                 ->order_by('id','asc');
+        $query=$this->db->get();
+        $groups=array();
+        foreach($query->result_array() as $row){
+            $groups[]=$row;
+        }
+        $data['groups']=$groups;
+        $data['study']=$study;
+        $data['form_action']=site_url('study/group_save');
+
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+
+        $data=array_merge($this->data,$data);
+        $this->load->view('study/group',$data);
     }
 
 
@@ -328,9 +331,10 @@ class Study extends CI_Controller {
                         //TODO:这里的功能没有测试
                         $this->db->delete('group',array('id'=>$row['group_id']));
                         //删除相关group的记录: a2l,a两表
-                        $this->db->join('allocation a','a2l.allocation_id=a.id','inner')
-                                 ->delete('allocation2layer a2l',array('a.group_id'=>$row['group_id']));
-                        var_dump($this->db->last_query());
+                        $sql="delete a2l from {$this->db->dbprefix}allocation2layer a2l
+                              inner join {$this->db->dbprefix}allocation a on a2l.allocation_id=a.id
+                              where a.group_id={$row['group_id']}";
+                        $this->db->query($sql);
                         $this->db->delete('allocation',array('group_id'=>$row['group_id']));
                     }
                     //var_dump($groups,$group_new);
