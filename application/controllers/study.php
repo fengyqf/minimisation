@@ -88,6 +88,11 @@ class Study extends CI_Controller {
         if(isset($edit_id) && $edit_id > 0) {
             $this->load->model('study_model');
             $study=$this->study_model->get($edit_id);
+            //检查所有权
+            if($study['owner_uid'] != $this->operate_user_id){
+                //var_dump($study['owner_uid'] , $this->operate_user_id);
+                redirect('study/');
+            }
         }else{
             $study=array(
                 'id'=>$edit_id,
