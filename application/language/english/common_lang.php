@@ -38,6 +38,8 @@ $lang['add_more_layers'] = "+ Add More";
 
 //allocation
 $lang['allocations_count'] = "Allocations Count";
+$lang['current_allocations'] = "Current Allocations";
+$lang['allocation_add'] = "Add New Allocation";
 
 $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';

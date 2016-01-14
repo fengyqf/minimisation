@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <?php echo $bootstrap; ?>
-<title>Study Add/Edit - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
+<title><?php echo lang('g_allocations');?> - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
 </head>
 <body>
 
@@ -55,6 +55,7 @@ if($study['study_id']==0){
 ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><?php echo lang('settings');?></div>
+	  <div class="panel-body">
       <form name="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
 		<div class="flash"><?php echo $flash; ?></div>
@@ -95,6 +96,7 @@ if($study['study_id']==0){
 		        <input name="id" type="hidden" id="id" value="<?php echo $study['id'];?>">
 		</div>
       </form>
+	  </div>
 	</div>
 
 

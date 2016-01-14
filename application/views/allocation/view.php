@@ -1,18 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-<html lang="zh-ch">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>Studys View</title>
-<link type="text/css" rel="stylesheet" href="<?php echo base_url('static'); ?>/style.css" />
+<?php echo $bootstrap; ?>
+<title><?php echo lang('g_allocations');?> - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
 </head>
 <body>
 
 <div id="container">
-    <h1>Studys View</h1>
 
-    <div id="body">
+	<ol class="breadcrumb">
+	  <li><a href="<?php echo site_url("/"); ?>">Home</a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>">试验项目</a></li>
+	  <li><a href="<?php echo $links['detail_link']; ?>"><?php echo $study['name'];?></a></li>
+	  <li class="active"><?php echo lang('g_allocations');?></li>
+	</ol>
+
+    <h1><?php echo $study['name']; ?></h1>
+	<ul class="nav nav-tabs">
+	  <li role="presentation"><a href="<?php echo $links['detail_link']; ?>">Details</a></li>
+	  <li role="presentation"><a href="<?php echo $links['edit']; ?>">Setting</a></li>
+	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>">Groups</a></li>
+	  <li role="presentation"><a href="<?php echo $links['factors']; ?>">Factors</a></li>
+	  <li role="presentation" class="active"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>">Allocations</a></li>
+	  <li role="presentation" class="disabled"><a href="#">Balance</a></li>
+	</ul>
+
+	<div class="panel panel-default">
+	  <div class="panel-heading"><?php echo lang('current_allocations');?></div>
+	  <div class="panel-body">
+<?php if(1==2){ ?>
 		<dl>
 			<dt>ID</dt>
 			<dd><?php echo $study['id']; ?></dd>
@@ -39,13 +58,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</dd>
 		</dl>
 
-		<div>
-<?php
-//根据第一行数据计算列数
-?>
-		  <table width="100%" border="1" cellspacing="1" cellpadding="4">
+<?php } ?>
+		<div class="table-responsive">
+		  <table class="table table-bordered">
             <tr>
-              <th>因素</th>
+              <th><?php echo lang('g_factors');?></th>
 <?php
 foreach($factors as $factor){
 	//计算表格列数，及跨列长度
@@ -58,7 +75,7 @@ foreach($factors as $factor){
               <th>&nbsp;</th>
             </tr>
             <tr>
-              <th>水平</th>
+              <th><?php echo lang('g_layers');?></th>
 <?php
 foreach($factors as $factor){
 	//计算表格列数，及跨列长度
@@ -95,10 +112,9 @@ foreach($groups as $group_id => $group){
 ?>
           </table>
 		</div>
-
-
-
-    </div>
+		<a class="btn btn-default" href="<?php echo $study['allocation_add_link']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?></a>
+	  </div>
+	</div>
 
 
 </div>

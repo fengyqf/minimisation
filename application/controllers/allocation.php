@@ -23,9 +23,12 @@ class Allocation extends CI_Controller {
 
 
         //当前操作的用户，可以挂接任何用户系统
+        $this->operate_user_id=7;
         $this->load->database('default');
         $this->lang->load('common');
-        $this->operate_user_id=7;
+
+        $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
+        $this->data['site_name']=$this->config->item('site_name');
     }
 
 
@@ -69,6 +72,14 @@ class Allocation extends CI_Controller {
         $data['study']=$study;
         $data['factors']=$factors;
         $data['groups']=$groups;
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+        $data=array_merge($this->data,$data);
         $this->load->view('allocation/view',$data);
     }
 
@@ -80,7 +91,6 @@ class Allocation extends CI_Controller {
         //检测权限
         $this->load->model('study_model');
         $study=$this->study_model->get($study_id);
-        var_dump($study);
         if($this->operate_user_id!=$study['owner_uid']){
             redirect('study/');
         }
@@ -131,10 +141,26 @@ class Allocation extends CI_Controller {
         }
 
 
+        $study['groups_link']=site_url('study/group?study_id='.$study['id']);
+        $study['factors_link']=site_url('factor/?study_id='.$study['id']);
+        $study['layers_link']=site_url('layer/?study_id='.$study['id']);
+        $study['detail_link']=site_url('study/'.$study['id']);
+        $study['edit_link']=site_url('study/edit/'.$study['id']);
+        $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
+        $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
+        $data['study']=$study;
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
         $data['form_action']=site_url("/allocation/add_do");
         $data['study_id']=$study_id;
         $data['factors']=$factors;
         $data['flash']=$flash;
+        $data=array_merge($this->data,$data);
         $this->load->view('allocation/add',$data);
     }
 
@@ -377,6 +403,7 @@ class Allocation extends CI_Controller {
         $data['link']['view']=site_url('/allocation');
         //var_dump($data);
 
+        $data=array_merge($this->data,$data);
         $this->load->view('allocation/add_done',$data);
     }
 
