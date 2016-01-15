@@ -12,8 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id="container">
 
 	<ol class="breadcrumb">
-	  <li><a href="<?php echo site_url("/"); ?>">Home</a></li>
-	  <li><a href="<?php echo site_url("study/"); ?>">试验项目</a></li>
+	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_study');?></a></li>
 	  <li class="active">全部项目</li>
 	</ol>
 

@@ -12,20 +12,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id="container">
 
 	<ol class="breadcrumb">
-	  <li><a href="<?php echo site_url("/"); ?>">Home</a></li>
-	  <li><a href="<?php echo site_url("study/"); ?>">试验项目</a></li>
+	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_study');?></a></li>
 	  <li><a href="<?php echo $links['detail_link']; ?>"><?php echo $study['name'];?></a></li>
 	  <li class="active"><?php echo lang('g_allocations');?></li>
 	</ol>
 
     <h1><?php echo $study['name']; ?></h1>
 	<ul class="nav nav-tabs">
-	  <li role="presentation"><a href="<?php echo $links['detail_link']; ?>">Details</a></li>
-	  <li role="presentation"><a href="<?php echo $links['edit']; ?>">Setting</a></li>
-	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>">Groups</a></li>
-	  <li role="presentation"><a href="<?php echo $links['factors']; ?>">Factors</a></li>
-	  <li role="presentation" class="active"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>">Allocations</a></li>
-	  <li role="presentation" class="disabled"><a href="#">Balance</a></li>
+	  <li role="presentation"><a href="<?php echo $links['detail_link']; ?>"><?php echo lang('details');?></a></li>
+	  <li role="presentation"><a href="<?php echo $links['edit']; ?>"><?php echo lang('settings');?></a></li>
+	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>"><?php echo lang('g_groups');?></a></li>
+	  <li role="presentation"><a href="<?php echo $links['factors']; ?>"><?php echo lang('g_factors');?></a></li>
+	  <li role="presentation" class="active"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('g_allocations');?></a></li>
 	</ul>
 
 	<div class="panel panel-default">

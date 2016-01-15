@@ -12,20 +12,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id="container">
 
 	<ol class="breadcrumb">
-	  <li><a href="<?php echo site_url("/"); ?>">Home</a></li>
-	  <li><a href="<?php echo site_url("study/"); ?>">试验项目</a></li>
+	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_study');?></a></li>
 	  <li><a href="<?php echo $links['detail_link']; ?>"><?php echo $study['name'];?></a></li>
 	  <li class="active"><?php echo lang('g_factors');?></li>
 	</ol>
 
     <h1><?php echo $study['name']; ?></h1>
 	<ul class="nav nav-tabs">
-	  <li role="presentation"><a href="<?php echo $links['detail_link']; ?>">Details</a></li>
-	  <li role="presentation"><a href="<?php echo $links['edit']; ?>">Setting</a></li>
-	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>">Groups</a></li>
-	  <li role="presentation" class="active"><a href="<?php echo $links['factors']; ?>">Factors</a></li>
-	  <li role="presentation"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>">Allocations</a></li>
-	  <li role="presentation" class="disabled"><a href="#">Balance</a></li>
+	  <li role="presentation"><a href="<?php echo $links['detail_link']; ?>"><?php echo lang('details');?></a></li>
+	  <li role="presentation"><a href="<?php echo $links['edit']; ?>"><?php echo lang('settings');?></a></li>
+	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>"><?php echo lang('g_groups');?></a></li>
+	  <li role="presentation" class="active"><a href="<?php echo $links['factors']; ?>"><?php echo lang('g_factors');?></a></li>
+	  <li role="presentation"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('g_allocations');?></a></li>
 	</ul>
 
 <?php if(isset($flash) and $flash){ ?>
@@ -51,8 +50,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			  <td><?php echo $item['factor_name']; ?></td>
 			  <td><?php echo $item['weight'];?></td>
 			  <td nowrap="nowrap">
-				<a href="<?php echo $item['edit_link'];?>"><?php echo lang('edit');?></a>
-				<a href="<?php echo $item['del_link'];?>" onClick="return confirm('<?php echo lang('text_factor_delete_confirm_notice');?>')"><?php echo lang('delete');?></a>
+				<a class="btn btn-default btn-sm" role="button" href="<?php echo $item['edit_link'];?>"><?php echo lang('edit');?></a>
+				<a class="btn btn-default btn-sm" role="button" href="<?php echo $item['del_link'];?>" onClick="return confirm('<?php echo lang('text_factor_delete_confirm_notice');?>')"><?php echo lang('delete');?></a>
 			  </td>
 			  <td>
 <?php		if(count($item['layers']) == 0 ){ ?>
@@ -63,7 +62,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php		}
 		}
 ?>
-				<a href="<?php echo $item['layers_link'];?>"><?php echo lang('edit');?></a>
+				<a class="btn btn-default btn-sm" role="button" href="<?php echo $item['layers_link'];?>"><?php echo lang('edit');?></a>
 			  </td>
 			</tr>
 <?php } ?>
@@ -76,10 +75,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <div class="panel-heading"><?php echo lang('add_new_factor');?></div>
 		 <form name="form1" method="post" action="<?php echo $form_add_action;?>">
 			<dl>
-				<dt>Factor Name</dt>
+				<dt><?php echo lang('factor_name');?></dt>
 				<dd><input name="name" type="text" value=""></dd>
-				<dt>Weight</dt>
-				<dd><input name="weight" type="text" value="">(numeric)</dd>
+				<dt><?php echo lang('weight');?></dt>
+				<dd><input name="weight" type="text" value="">(<?php echo lang('numeric_required');?>)</dd>
 				<dt></dt>
 				<dd><input type="submit" name="Submit" value="<?php echo lang('submit');?>">
 				<input name="study_id" type="hidden" value="<?php echo $study['id'];?>"></dd>

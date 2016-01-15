@@ -12,10 +12,15 @@ $lang['g_allocation']  = "Allocation";
 $lang['g_allocations'] = "Allocations";
 $lang['g_group']  = "Group";
 $lang['g_groups'] = "Groups";
+$lang['g_home']  = "Home Page";
 
 $lang['g_bias'] = "Bias Probability destribution";
+$lang['bias'] = "Bias";
+$lang['text_bias_note'] = "0.5~1";
 
 $lang['g_study_name'] = "Study Name";
+$lang['study_name'] = "Study Name";
+$lang['add_time'] = "Add Time";
 
 
 $lang['submit'] = "Submit";
@@ -24,6 +29,9 @@ $lang['delete'] = "Delete";
 $lang['operate']='Operate';
 $lang['weight']='Weight';
 $lang['settings'] = "Settings";
+$lang['details'] = "Details";
+$lang['property'] = "Property";
+$lang['confirm'] = "Confirm";
 
 
 //study
@@ -31,7 +39,10 @@ $lang['settings'] = "Settings";
 $lang['add_more_groups'] = "+ Add More";
 $lang['edit_factor'] = "Edit Factor";
 $lang['groups_in_%s'] = "Groups in <strong>%s</strong>";
+$lang['add_new_study'] = "Add New Study";
+$lang['edit_study'] = "Edit Study";
 
+$lang['factors_layers'] = "Factors/Layers";
 
 $lang['none_layers'] = "none layers";
 $lang['add_more_layers'] = "+ Add More";
@@ -40,13 +51,19 @@ $lang['add_more_layers'] = "+ Add More";
 $lang['allocations_count'] = "Allocations Count";
 $lang['current_allocations'] = "Current Allocations";
 $lang['allocation_add'] = "Add New Allocation";
+$lang['layer_of_every_factor'] = "Layer of Every Factor";
+$lang['additions'] = "Additions";
+$lang['addition_name'] = "Name";
+$lang['text_addition_name_notice'] = "blank allowed, auto fill.";
+$lang['aim_group'] = "Aim Group";
+$lang['next_step'] = "Next";
 
 $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';
 
 $lang['text_study_group_notice']='input all the groups below, each in one box; blank box will be ignored.<br>to delete a group, just delete it and submit.';
-$lang['allocation_fix_add']='录错了，点此清理并录';
-
+$lang['allocation_fix_add']='Mistaken? Correct It';
+$lang['confirm_allocate'] = "Do Allocate";
 
 //factor
 $lang['factor_name']='Factor Name';
@@ -56,4 +73,5 @@ $lang['text_factor_delete_confirm_notice']='Layers in this Factor and the Alloca
 $lang['add_new_factor'] = "Add New Factor";
 $lang['layers_in_%s']='Edit Layers in <strong>%s</strong>';
 $lang['text_factor_layers_edit_notice']="input all the Layers in this factor below, each in one box; blank box will be ignored.<br>to delete a layer, just delete it and submit.";
+$lang['numeric_required']='numeric required';
 
