@@ -38,6 +38,12 @@ class Study_model extends CI_Model {
         if($row=$query->row_array()){
             $row['bias']=$row['bias']/100;
             $study=$row;
+        }else{
+            $study['id']=0;
+            $study['name']=NULL;
+            $study['bias']=0;
+            $study['owner_uid']=-1;
+            $study['time']='';
         }
         return $study;
     }

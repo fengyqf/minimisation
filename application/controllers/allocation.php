@@ -175,6 +175,18 @@ class Allocation extends CI_Controller {
         $factors=($this->input->post('factors'));
         //var_dump($factors);
         //检测当前操作用户是否有操作study_id的权限
+        $this->load->model('study_model');
+        $study=$this->study_model->get($study_id);
+        if($this->operate_user_id!=$study['owner_uid']){
+            redirect('study/');
+        }else{
+            $study_name=$study['name'];
+            $study_group_count=$study['group_count'];
+            $study_owner_uid=$study['owner_uid'];
+            //偏倚分配概率 Bias probability distribution
+            $study_bias=(int)$study['bias'];     //1-100的整数
+        }
+
         $this->db
             ->select('id,name,bias,group_count,owner_uid')
             ->from('study')
@@ -397,6 +409,15 @@ class Allocation extends CI_Controller {
                 'group_id'=>$aim_group_id,
                 'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
+
+        $data['study']=$study;
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
 
         $data['link']['add_new']=site_url('/allocation/add?study_id='.$study_id);
         $data['link']['correct']=site_url('/allocation/correct/'.$new_allocation_id);

@@ -45,6 +45,8 @@ $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';
 
 $lang['text_study_group_notice']='input all the groups below, each in one box; blank box will be ignored.<br>to delete a group, just delete it and submit.';
+$lang['allocation_fix_add']='录错了，点此清理并录';
+
 
 //factor
 $lang['factor_name']='Factor Name';
