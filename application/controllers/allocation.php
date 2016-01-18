@@ -130,7 +130,7 @@ class Allocation extends CI_Controller {
             }
         }
         foreach ($factors as $factor) {
-            if(!isset($factor['layers']) or count($factor['layers'])<=2){
+            if(!isset($factor['layers']) or count($factor['layers'])<2){
                 $mesg=sprintf(lang('mesg_layers_not_enough_in_%s'),$factor['factor_name']);
                  if($flash){
                     $flash.='<br>'.$mesg;
@@ -193,6 +193,9 @@ class Allocation extends CI_Controller {
         $groups=array();
         foreach ($query->result_array() as $row) {
             $groups[$row['id']]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
+        }
+        if(!$groups){
+            redirect('study/group?study_id='.$study_id);
         }
 
         $data_layers=array();
@@ -284,7 +287,10 @@ class Allocation extends CI_Controller {
         $gs_m=each($group_sum_sd);  //group sum sd中最小值minimal
         $gs_n=each($group_sum_sd);  //group sum sd中次小值next
         //var_dump($gs_m,$gs_n);
-        if($gs_m['value']==$gs_n['value']){
+        if(!$gs_n){
+            //项目只定义了一个group
+            $aim_group_id=$gs_m['key'];
+        }elseif($gs_m['value']==$gs_n['value']){
             //随机分配到所有最小值的组中
             //探测所有与$gs_m['value']相同的值, 将key存储到$minimal_keys[]中
             $minimal_keys[]=$gs_m['key'];
@@ -440,7 +446,7 @@ class Allocation extends CI_Controller {
       * @param bool $sample [optional] Defaults to false
       * @return float|bool The standard deviation or false on error.
       */
-     function stats_standard_deviation(array $a, $sample = false) {
+    private function stats_standard_deviation(array $a, $sample = false) {
          $n = count($a);
          if ($n === 0) {
              trigger_error("The array has zero elements", E_USER_WARNING);
@@ -460,7 +466,7 @@ class Allocation extends CI_Controller {
             --$n;
          }
          return sqrt($carry / $n);
-     }
+    }
 
 
 
