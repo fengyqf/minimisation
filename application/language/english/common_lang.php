@@ -33,6 +33,9 @@ $lang['settings'] = "Settings";
 $lang['details'] = "Details";
 $lang['property'] = "Property";
 $lang['confirm'] = "Confirm";
+$lang['view'] = "View";
+$lang['add'] = "Add";
+$lang['detail'] = "Detail";
 
 
 //study

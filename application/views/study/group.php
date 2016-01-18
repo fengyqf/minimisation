@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php foreach($groups as $group){ ?>
 		<li><input name="groups[<?php echo $group['id'] ;?>]" type="text" value="<?php echo $group['name']; ?>"></li>
 <?php } ?>
-		<li><input name="group_new[]" type="text" value=""> <button class="btn btn-xs" id="btn_add_group" type="button"><?php echo lang('add_more_groups'); ?></button></li>
+		<li><input name="group_new[]" type="text" value=""> <button class="btn btn-xs" id="btn_add_group" type="button" tabindex="9999"><?php echo lang('add_more_groups'); ?></button></li>
 		<li><input name="group_new[]" type="text" value=""></li>
 		</ul>
 

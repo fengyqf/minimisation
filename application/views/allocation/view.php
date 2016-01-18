@@ -66,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 foreach($factors as $factor){
 	//计算表格列数，及跨列长度
 ?>
-              <th colspan="<?php echo count($factor['layers']);?>"><?php echo $factor['factor_name'];?> (<?php echo $factor['factor_id'];?>)</th>
+              <th colspan="<?php echo count($factor['layers']);?>"><?php echo $factor['factor_name'];?></th>
 <?php
 }
 ?>
@@ -80,7 +80,7 @@ foreach($factors as $factor){
 	//计算表格列数，及跨列长度
 		foreach($factor['layers'] as $layer){
 ?>
-              <th><?php echo $layer['layer_name'];?> (<?php echo $layer['layer_id'];?>)</th>
+              <th><?php echo $layer['layer_name'];?></th>
 <?php
 		}
 }

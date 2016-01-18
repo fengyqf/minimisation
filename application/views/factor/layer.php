@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php foreach($layers as $layer){ ?>
 			<li><input name="layers[<?php echo $layer['layer_id'] ;?>]" type="text" value="<?php echo $layer['layer_name']; ?>"></li>
 <?php } ?>
-			<li><input name="layer_new[]" type="text" value=""> <button class="btn btn-xs" id="btn_add" type="button"><?php echo lang('add_more_layers'); ?></button></li>
+			<li><input name="layer_new[]" type="text" value=""> <button class="btn btn-xs" id="btn_add" type="button" tabindex="9999"><?php echo lang('add_more_layers'); ?></button></li>
 			<li><input name="layer_new[]" type="text" value=""></li>
 		</ul>
 		<div class="box_btn">
