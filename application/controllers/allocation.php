@@ -385,6 +385,7 @@ class Allocation extends CI_Controller {
     public function correct($allocation_id){
         $allocation_id=(int)$allocation_id;
         //检查 $allocation_id对应的study是否是当前用户所有
+        $study_id=0;
         $this->db->select('s.id as study_id,s.owner_uid')
                  ->from('allocation2layer p2l')
                  ->join('layer l','l.id=p2l.layer_id','inner')
@@ -394,20 +395,23 @@ class Allocation extends CI_Controller {
                  ->where('s.owner_uid',$this->operate_user_id)
                  ->limit(1);
         $query=$this->db->get();
-        if($query->num_rows()>0){
+        if($row=$query->row_array()){
+            $study_id=$row['study_id'];
             //有相应记录，检查通过，做清理操作: p,p2l 两表
             $this->db->delete('allocation',array(
                     'id'=>$allocation_id
                 ));
-            var_dump($this->db->last_query());
+            //var_dump($this->db->last_query());
             $this->db->delete('allocation2layer',array(
                     'allocation_id'=>$allocation_id
                 ));
-            var_dump($this->db->last_query());
+            //var_dump($this->db->last_query());
+            $flash=lang('allocation_correct_notice');
+            redirect('allocation/add?study_id='.$study_id.'&flash='.$flash);
+        }else{
+            redirect('study/');
         }
 
-        $flash='原Allocation已清理，请重新录入分配';
-        redirect('allocation/add?flash='.$flash);
     }
 
 

@@ -70,6 +70,7 @@ $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>'
 $lang['text_study_group_notice']='input all the groups below, each in one box; blank box will be ignored.<br>to delete a group, just delete it and submit.';
 $lang['allocation_fix_add']='Mistaken? Correct It';
 $lang['confirm_allocate'] = "Do Allocate";
+$lang['allocation_correct_notice']='this Allocation was cleared, input and allocate again please.';
 
 //factor
 $lang['factor_name']='Factor Name';
