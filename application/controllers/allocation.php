@@ -173,7 +173,6 @@ class Allocation extends CI_Controller {
             $allocation_name='Anonymous ('.date('YmdHis').')';
         }
         $factors=($this->input->post('factors'));
-        //var_dump($factors);
         //检测当前操作用户是否有操作study_id的权限
         $this->load->model('study_model');
         $study=$this->study_model->get($study_id);
@@ -183,26 +182,7 @@ class Allocation extends CI_Controller {
             $study_name=$study['name'];
             $study_group_count=$study['group_count'];
             $study_owner_uid=$study['owner_uid'];
-            //偏倚分配概率 Bias probability distribution
             $study_bias=(int)$study['bias'];     //1-100的整数
-        }
-
-        $this->db
-            ->select('id,name,bias,group_count,owner_uid')
-            ->from('study')
-            ->where('owner_uid',$this->operate_user_id)
-            ->where('id',$study_id)
-            ->limit(1);
-        $query=$this->db->get();
-        if($row=$query->row_array()){
-            $study_name=$row['name'];
-            $study_group_count=$row['group_count'];
-            $study_owner_uid=$row['owner_uid'];
-            //偏倚分配概率 Bias probability distribution
-            $study_bias=(int)$row['bias'];     //1-100的整数
-        }else{
-            echo('study not exists');
-            return;
         }
 
         $this->db
@@ -214,39 +194,6 @@ class Allocation extends CI_Controller {
         foreach ($query->result_array() as $row) {
             $groups[$row['id']]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
         }
-        //检测当前操作用户对几个factor的权限
-        //TODOs
-        //.................
-
-        //检测当前添加的几个factor是否是本study,是否完整，对应的layer是否正确
-        //TODOs
-        //.................
-
-
-        //读当前study的几个factor对应的layer值的统计计数
-        /*
-        ----这个语句效率可能有点低，测试阶段先这样用。几个优化思路
-        //?? TODO
-         - 将相关数据读出并插入一张临时表中，再做统计
-         - 忽略where对子句对f.study_id的判断(这是一个严谨的判断)
-
-        SELECT p.group_id,p2l.`layer_id`,count(p2l.`allocation_id`) as cnt
-        FROM `mnms_allocation2layer` p2l
-        INNER JOIN `mnms_layer` l ON l.`id` = p2l.`layer_id`
-        INNER JOIN mnms_factor f ON f.id = l.factor_id
-        INNER JOIN mnms_allocation p ON p.id = p2l.allocation_id
-        WHERE f.study_id=2001 and p2l.layer_id in(2,4,6)
-        group by p.group_id,p2l.`layer_id`
-        */
-
-        //当前study相关的layer-factor数组，按layer_id查找查找对应factor的weight
-        /*
-        SELECT l.id as layer_id,l.name as layer_name,f.id as factor_id,f.name as factor_name,f.weight as factor_weight
-        FROM `mnms_layer` l 
-          inner join mnms_factor f on f.id=l.factor_id
-        WHERE f.study_id=2001
-        order by f.id asc, l.id asc
-        */
 
         $data_layers=array();
         $this->db->select('l.id as layer_id,l.name as layer_name,f.id as factor_id,f.name as factor_name,f.weight as factor_weight')
