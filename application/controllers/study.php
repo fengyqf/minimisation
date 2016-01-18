@@ -90,12 +90,12 @@ class Study extends CI_Controller {
             $study=$this->study_model->get($edit_id);
             //检查所有权
             if($study['owner_uid'] != $this->operate_user_id){
-                //var_dump($study['owner_uid'] , $this->operate_user_id);
-                redirect('study/');
+                var_dump($study['owner_uid'] , $this->operate_user_id);
+                //redirect('study/');
             }
         }else{
             $study=array(
-                'id'=>$edit_id,
+                'id'=>isset($edit_id) ? (int)$edit_id : 0 ,
                 'name'=>isset($default_data['name']) ? $default_data['name'] : '' ,
                 'bias'=>isset($default_data['bias']) ? $default_data['bias'] : '0.8',
                 'group_count'=>isset($default_data['group_count']) ? $default_data['group_count'] : 2,
@@ -126,7 +126,7 @@ class Study extends CI_Controller {
 
 
     public function add($hay=NULL){
-        $this->edit($hay);
+        $this->_edit($hay);
     }
 
 
@@ -145,7 +145,10 @@ class Study extends CI_Controller {
         //
         $bias=$this->input->post('bias') * 100;
         $name=$this->input->post('name');
-        var_dump($bias);
+        if(!$name){
+            $name=lang('default_study_name');
+        }
+        //var_dump($bias);
         if($bias<=0){
             $bias=$this->config->item('default_bias');
         }
@@ -160,8 +163,8 @@ class Study extends CI_Controller {
             //insert
             $this->db->insert('study',$data);
             $id=$this->db->insert_id();
-            //重定向到group管理中
-            redirect('study/group?study_id='.$id);
+            //不管是否指定了 in_add_guide 都重定向到group管理中
+            redirect('study/group?in_add_guide=1&study_id='.$id);
         }else{
             //update
             //验证该id所有者是当前用户
@@ -247,8 +250,11 @@ class Study extends CI_Controller {
         }
 
         //allocation计数
-        $allocations_count=$this->db->where_in('group_id',$group_ids)
+        $allocations_count=0;
+        if($group_ids){
+            $allocations_count=$this->db->where_in('group_id',$group_ids)
                  ->count_all_results('allocation');
+        }
 
         $data['study']=$study;
         $data['factors']=$data_factors;
@@ -269,6 +275,7 @@ class Study extends CI_Controller {
 
     public function group(){
         $study_id=$this->input->get('study_id');
+        $in_add_guide=$this->input->get('in_add_guide');
         //检测所有权限
         $this->load->model('study_model');
         $study=$this->study_model->get($study_id);
@@ -288,6 +295,7 @@ class Study extends CI_Controller {
         }
         $data['groups']=$groups;
         $data['study']=$study;
+        $data['in_add_guide']=$in_add_guide;
         $data['form_action']=site_url('study/group_save');
 
         $data['links']['edit']=site_url("/study/edit/".$study_id);
@@ -353,7 +361,11 @@ class Study extends CI_Controller {
                 $this->db->insert_batch('group',$data);
             }
         }
-        redirect('study/'.$study_id);
+        if($this->input->post('in_add_guide')==1){
+            redirect('factor/?study_id='.$study_id);
+        }else{
+            redirect('study/'.$study_id);
+        }
     }
 
 }

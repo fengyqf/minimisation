@@ -31,10 +31,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="alert alert-warning" role="alert"><?php echo $flash; ?></div>
 <?php } ?>
 
-<?php if(count($factors)>0){ ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><?php echo lang('current_factor_and_layers');?></div>
 	  <div class="panel-body">
+<?php if(count($factors)>0){ ?>
 		<table class="table table-striped">
 		  <thead>
 			<tr>
@@ -68,9 +68,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php } ?>
 		  </tbody>
 		</table>
+<?php }else{ ?>
+		<div class="alert alert-warning" role="alert"><?php echo lang('text_factors_none_notice');?></div>
+<?php } ?>
 	  </div>
 	</div>
-<?php } ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><?php echo lang('add_new_factor');?></div>
 		 <form name="form1" method="post" action="<?php echo $form_add_action;?>">
@@ -80,8 +82,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<dt><?php echo lang('weight');?></dt>
 				<dd><input name="weight" type="text" value="">(<?php echo lang('numeric_required');?>)</dd>
 				<dt></dt>
-				<dd><input type="submit" name="Submit" value="<?php echo lang('submit');?>">
-				<input name="study_id" type="hidden" value="<?php echo $study['id'];?>"></dd>
+				<dd>
+					<button type="submit" class="btn btn-default"><?php echo lang('submit');?></button>
+					<input name="study_id" type="hidden" value="<?php echo $study['id'];?>">
+				</dd>
 			</dl>
 		</form>
 	</div>

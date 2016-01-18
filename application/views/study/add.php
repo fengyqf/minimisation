@@ -88,9 +88,13 @@ if($study['study_id']==0){
 
 
 
-
 		<div class="box_btn">
-				<input type="submit" name="Submit" value="<?php echo lang('submit');?>">
+<?php if(isset($in_add_guide) && $in_add_guide==1){ ?>
+			<button type="submit" class="btn btn-default"><?php echo lang('next_step');?></button>
+		        <input name="in_add_guide" type="hidden" id="in_add_guide" value="1">
+<?php }else{ ?>
+			<button type="submit" class="btn btn-default"><?php echo lang('submit');?></button>
+<?php } ?>
 		        <input name="id" type="hidden" id="id" value="<?php echo $study['id'];?>">
 		</div>
       </form>

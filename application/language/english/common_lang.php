@@ -17,6 +17,7 @@ $lang['g_home']  = "Home Page";
 $lang['g_bias'] = "Bias Probability destribution";
 $lang['bias'] = "Bias";
 $lang['text_bias_note'] = "0.5~1";
+$lang['default_study_name'] = "New Study";
 
 $lang['g_study_name'] = "Study Name";
 $lang['study_name'] = "Study Name";
@@ -74,4 +75,4 @@ $lang['add_new_factor'] = "Add New Factor";
 $lang['layers_in_%s']='Edit Layers in <strong>%s</strong>';
 $lang['text_factor_layers_edit_notice']="input all the Layers in this factor below, each in one box; blank box will be ignored.<br>to delete a layer, just delete it and submit.";
 $lang['numeric_required']='numeric required';
-
+$lang['text_factors_none_notice']='None factor added, You must add severial factors; And you must add at least 2 layers for each factor';

@@ -53,7 +53,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</ul>
 
 		<div class="box_btn">
+<?php if(isset($in_add_guide)){ ?>
+		        <input name="in_add_guide" type="hidden" id="in_add_guide" value="1">
+			<button type="submit" class="btn btn-default"><?php echo lang('next_step');?></button>
+<?php }else{ ?>
 			<button type="submit" class="btn btn-default"><?php echo lang('submit');?></button>
+<?php } ?>
 				<input type="hidden" name="study_id" value="<?php echo $study['id'];?>">
 		</div>
       </form>

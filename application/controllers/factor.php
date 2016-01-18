@@ -124,7 +124,7 @@ class Factor extends CI_Controller {
                 'weight'=>$weight,
                 ));
             $factor_id=$this->db->insert_id();
-            redirect('factor/?factor_id='.$factor_id);
+            redirect('factor/layer?factor_id='.$factor_id);
         }
 
     }
@@ -240,11 +240,22 @@ class Factor extends CI_Controller {
         $factor_id=$this->input->post('factor_id');
         $layers=$this->input->post('layers');
         $layer_new=$this->input->post('layer_new');
-        $study_id=0;
+        //计算study_id，并检测权限
+        $this->load->model('factor_model');
+        $study=$this->factor_model->get_study(array('factor_id'=>$factor_id));
+        if(!$study){
+            redirect('study/');
+        }else{
+            $study_id=isset($study['id']) ? $study['id'] : 0;
+            $owner_uid=isset($study['owner_uid']) ? (int)$study['owner_uid'] : 0;
+            if(!$study_id or $owner_uid!=$this->operate_user_id){
+                redirect('study/');
+            }
+        }
         //修改部分$layers
         if(count($layers)>=1){
             $this->db
-                 ->select('l.id as layer_id,l.name as layer_name,s.id as study_id,s.name as study_name')
+                 ->select('l.id as layer_id,l.name as layer_name')
                  ->from('layer l')
                  ->join('factor f','f.id=l.factor_id','inner')
                  ->join('study s','s.id=f.study_id','inner')
@@ -252,9 +263,8 @@ class Factor extends CI_Controller {
                  ->where_in('l.id',array_keys($layers))
                  ->order_by('l.id','asc');
             $query=$this->db->get();
-            var_dump($this->db->last_query());
+            //var_dump($this->db->last_query());
             foreach($query->result_array() as $row ){
-                $study_id=$row['study_id'];
                 //按上面带权限限定的查询结果，更新相应layer_id对应的数据，
                 //  更新为POST['layers']中对应值，事实上仅layer.name
                 if(isset($layers[$row['layer_id']])){

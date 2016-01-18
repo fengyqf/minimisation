@@ -68,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php } ?>
 
 		<fieldset>
-			<legend><?php echo $aim_group['next_step'];?></legend>
+			<legend><?php echo lang('next_step');?></legend>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">&nbsp;</label>
 				<div class="col-sm-10">
@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?>
 					</a>
 					<a class="btn btn-default" role="button" href="<?php echo $link['correct']; ?>"><?php echo lang('allocation_fix_add');?></a>
-					<a class="btn btn-default" role="button" href="<?php echo $link['view']; ?>"><?php echo lang('view');?></a>
+					<a class="btn btn-default" role="button" href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('allocations');?></a>
 				</div>
 			</div>
 		</fieldset>

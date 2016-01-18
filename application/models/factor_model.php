@@ -115,4 +115,44 @@ class Factor_model extends CI_Model {
         return $gl_cnt;
     }
 
+
+    /** 根据关联数组读取相应study数据
+    */
+    public function get_study($hay){
+        $this->db->flush_cache();
+        if(isset($hay['layer_id'])){
+            $q=1;
+            $this->db->select('s.id,s.name,s.bias,s.group_count,s.owner_uid,from_unixtime(s.time) as time')
+                     ->from('layer l')
+                     ->join('factor f','f.id=l.factor_id','inner')
+                     ->join('study s','s.id=f.study_id','inner')
+                     ->where('l.id',(int)$hay['layer_id']);
+        }
+        if(isset($hay['factor_id'])){
+            $q=1;
+            $this->db->select('s.id,s.name,s.bias,s.group_count,s.owner_uid,from_unixtime(s.time) as time')
+                     ->from('factor f')
+                     ->join('study s','s.id=f.study_id','inner')
+                     ->where('f.id',(int)$hay['factor_id']);
+        }
+        if(isset($hay['study_id'])){
+            $q=1;
+            $this->db->select('s.id,s.name,s.bias,s.group_count,s.owner_uid,from_unixtime(s.time) as time')
+                     ->from('study s')
+                     ->where('s.id',(int)$hay['factor_id']);
+        }
+        if($q!=1){
+            return NULL;
+        }else{
+            $query=$this->db->get();
+            if($row=$query->row_array()){
+                return $row;
+            }else{
+                return NULL;
+            }
+            return $study;
+        }
+    }
+
+
 }
