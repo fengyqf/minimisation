@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 //general name
 $lang['g_study']  = "Study";
-$lang['g_studys'] = "Studys";
+$lang['g_studies'] = "Studies";
 $lang['g_factor']  = "Factor";
 $lang['g_factors'] = "Factors";
 $lang['g_layer']  = "Layer";

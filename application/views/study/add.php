@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<ol class="breadcrumb">
 	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
-	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_study');?></a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_studies');?></a></li>
 <?php if($study['study_id']==0){ ?>
 	  <li class="active"><?php echo lang('add_new_study');?></li>
 <?php }else{ ?>

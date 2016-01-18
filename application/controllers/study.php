@@ -56,7 +56,7 @@ class Study extends CI_Controller {
             ->where('owner_uid',$this->operate_user_id)
             ->order_by('id','desc');
         $query=$this->db->get();
-        $studys=array();
+        $studies=array();
         foreach($query->result_array() as $row){
             $row['groups_link']=site_url('study/group?id='.$row['id']);
             $row['detail_link']=site_url('study/'.$row['id']);
@@ -68,10 +68,10 @@ class Study extends CI_Controller {
             $row['allocations_link']=site_url('allocation/?study_id='.$row['id']);
             $row['allocation_add_link']=site_url('allocation/add?study_id='.$row['id']);
             $row['bias']=$row['bias']/100;
-            $studys[]=$row;
+            $studies[]=$row;
         }
-        //var_dump($studys);
-        $data['studys']=$studys;
+        //var_dump($studies);
+        $data['studies']=$studies;
         $data['links']['add']=site_url("/study/add");
         $data=array_merge($this->data,$data);
         $this->load->view('study/view',$data);

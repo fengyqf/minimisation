@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<ol class="breadcrumb">
 	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
-	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_study');?></a></li>
+	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_studies');?></a></li>
 	  <li class="active">全部项目</li>
 	</ol>
 
@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</tr>
 		  </thead>
 		  <tbody>
-<?php foreach($studys as $item){ ?>
+<?php foreach($studies as $item){ ?>
 			<tr>
 			  <td><?php echo $item['id']; ?></td>
 			  <td><a href="<?php echo $item['detail_link']; ?>" title="detail of this study"><?php echo $item['name']; ?></a></td>
