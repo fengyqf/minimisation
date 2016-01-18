@@ -61,6 +61,7 @@ class Study extends CI_Controller {
             $row['groups_link']=site_url('study/group?id='.$row['id']);
             $row['detail_link']=site_url('study/'.$row['id']);
             $row['edit_link']=site_url('study/edit/'.$row['id']);
+            $row['del_link']=site_url('study/del?id='.$row['id']);
             $row['groups_link']=site_url('study/group?study_id='.$row['id']);
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
@@ -268,8 +269,72 @@ class Study extends CI_Controller {
         $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
         $data=array_merge($this->data,$data);
         $this->load->view('study/detail',$data);
+    }
 
-        //$this->db->
+
+    public function del($id=NULL){
+        if(!$id){
+            $id=$this->input->get('id');
+        }
+        if(!$id){
+            redirect('study/');
+        }
+        $study_id=$id;
+        $this->load->model('study_model');
+        $study=$this->study_model->get($id);
+        if(!isset($study['owner_uid']) or $study['owner_uid']!=$this->operate_user_id){
+            redirect('study/');
+        }
+        //删除如下表中相关数据 group,factor,layer,allocation,allocation2layer,study
+
+        //删除a2l,layer,factor 三表中相应数据
+        $this->db->trans_start();
+        $sql="delete a FROM `{$this->db->dbprefix}allocation` a
+                INNER JOIN `{$this->db->dbprefix}allocation2layer` a2l ON a.id=a2l.allocation_id
+                INNER JOIN `{$this->db->dbprefix}layer` l ON a2l.layer_id=l.id
+                INNER JOIN `{$this->db->dbprefix}factor` f ON f.id = l.factor_id
+                WHERE f.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $sql="delete a2l FROM `{$this->db->dbprefix}allocation2layer` a2l
+                INNER JOIN `{$this->db->dbprefix}layer` l ON a2l.layer_id=l.id
+                INNER JOIN `{$this->db->dbprefix}factor` f ON f.id = l.factor_id
+                WHERE f.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $sql="delete l FROM `{$this->db->dbprefix}layer` l
+                INNER JOIN `{$this->db->dbprefix}factor` f ON f.id = l.factor_id
+                WHERE f.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->delete('factor',array('study_id'=>$study_id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->delete('study',array('id'=>$study_id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $sql="delete a FROM `{$this->db->dbprefix}allocation` a
+                INNER JOIN `{$this->db->dbprefix}group` g ON g.id = a.group_id
+                WHERE g.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->delete('group',array('study_id'=>$study_id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->trans_complete();
+        //echo "<a href='".site_url('study')."'>go back to studies</a>";
+        redirect('study/');
     }
 
 

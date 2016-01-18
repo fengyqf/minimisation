@@ -42,6 +42,8 @@ $lang['edit_factor'] = "Edit Factor";
 $lang['groups_in_%s'] = "Groups in <strong>%s</strong>";
 $lang['add_new_study'] = "Add New Study";
 $lang['edit_study'] = "Edit Study";
+$lang['all_studies'] = "All Studies";
+$lang['text_study_del_confirm'] = "Delete this study? all the allocations will LOST!";
 
 $lang['factors_layers'] = "Factors/Layers";
 

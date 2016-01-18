@@ -19,8 +19,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="row">
 	<h1>
-	<a class="navbar-brand" href="<?php echo site_url("study/"); ?>">所有试验项目</a>
-	<a class="btn btn-default" href="<?php echo $links['add']; ?>" role="button">添加新的研究</a>
+	<a class="navbar-brand" href="<?php echo site_url("study/"); ?>"><?php echo lang('all_studies');?></a>
+	<a class="btn btn-default" href="<?php echo $links['add']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('add_new_study');?></a>
 	</h1>
 	</div>
 
@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			  <td>
 				<a href="<?php echo $item['detail_link']; ?>" title="detail of this study">Detail</a>
 				<a href="<?php echo $item['edit_link']; ?>" title="edit this study">Edit</a>
+				<a href="<?php echo $item['del_link']; ?>" onClick="return confirm('<?php echo lang('text_study_del_confirm');?>')" title="delete this study"><?php echo lang('delete'); ?></a>
 				<a href="<?php echo $item['groups_link']; ?>" title="view the groups"><?php echo lang('g_groups'); ?></a>
 				<a href="<?php echo $item['factors_link']; ?>" title="view factors in this study">Factors</a>
 				<a href="<?php echo $item['layers_link']; ?>" title="view layers in this study">Layers</a>
