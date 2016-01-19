@@ -71,6 +71,7 @@ $lang['text_study_group_notice']='input all the groups below, each in one box; b
 $lang['allocation_fix_add']='Mistaken? Correct It';
 $lang['confirm_allocate'] = "Do Allocate";
 $lang['allocation_correct_notice']='this Allocation was cleared, input and allocate again please.';
+$lang['allocate_time'] = "Allocation Time";
 
 //factor
 $lang['factor_name']='Factor Name';

@@ -411,7 +411,126 @@ class Allocation extends CI_Controller {
         }else{
             redirect('study/');
         }
+    }
 
+
+    public function history(){
+        $study_id=(int)($this->input->get('study_id'));
+        $page=(int)($this->input->get('page'));
+        if($page<=0){
+            $page=1;
+        }
+        $this->load->model('study_model');
+        $study=$this->study_model->get($study_id);
+        if(!isset($study['owner_uid']) or $study['owner_uid']!=$this->operate_user_id){
+            redirect('study/');
+        }
+        $groups=array();
+        $this->db->select('id,name')
+                 ->from('group')
+                 ->where('study_id',$study_id)
+                 ->order_by('id','asc');
+        $query=$this->db->get();
+        foreach($query->result_array() as $row){
+            $groups[$row['id']]=array('group_id'=>$row['id'],'group_name'=>$row['name']);
+        }
+        //var_dump($groups);
+
+        $factors=array();
+        $this->db->select('id as factor_id,name as factor_name')
+                 ->from('factor')
+                 ->where('study_id',$study_id)
+                 ->order_by('id','asc');
+        $query=$this->db->get();
+        foreach($query->result_array() as $row){
+            $factors[]=$row;
+        }
+        //var_dump($factors);
+        //用于构造输出数据中的默认值: factor_id => allocation_layer_name
+        $def_factor_arr=array();
+        foreach ($factors as $factor) {
+            $def_factor_arr[$factor['factor_id']]='';
+        }
+
+        $fl_data=array();
+        /*
+        //factor-layer data, 本study项目中的所有
+        $this->db->select('f.id as factor_id,f.name as factor_name,l.id as layer_id,l.name as layer_name')
+                 ->from('factor f')
+                 ->join('layer l','l.factor_id=f.id','inner')
+                 ->where('f.study_id',$study_id);
+        $query=$this->db->get();
+        foreach ($query->result_array() as $row) {
+            $fl_data[$row['layer_id']]=$row;
+            $fl_data[$row['layer_id']]['factors']=$def_factor_arr;
+        }
+        //var_dump($this->db->last_query());
+        //var_dump($fl_data);
+        */
+
+        $a2l=array();
+        $this->db->select('a2l.`allocation_id`,f.id AS factor_id,f.name AS factor_name,a2l.`layer_id`,l.name AS layer_name')
+                 ->from('allocation2layer a2l')
+                 ->join('layer l','l.id = a2l.layer_id','join')
+                 ->join('factor f','f.id = l.factor_id')
+                 ->where('f.study_id',$study_id)
+                 ->order_by('a2l.id','asc');
+        $query=$this->db->get();
+        foreach ($query->result_array() as $row) {
+            $a2l[]=$row;
+        }
+        //var_dump($a2l);
+
+        $allocations=array();
+        //按分页读取相应的allocation记录，然后逐条记录 按该study的factor增加相应layer数据
+        $this->db->select('id,name,from_unixtime(time) as time')
+                 ->from('allocation')
+                 ->where_in('group_id', $groups ? array_keys($groups) : 0)
+                 ->order_by('id','desc')
+                 ->limit(($page-1),50);
+        $query=$this->db->get();
+        foreach ($query->result_array() as $row) {
+            $allocations[$row['id']]=$row;
+        }
+        //var_dump($this->db->last_query());
+        //var_dump($allocations);
+        foreach ($allocations as $key => $allocation) {
+            //计算每个allocation在各个factor上分配的layer_name，从fl_data中
+            foreach ($factors as $factor) {
+                //factor
+                $tmp_layer_name='???';
+                foreach($a2l as $item){
+                    if($item['factor_id']==$factor['factor_id'] && $allocation['id']==$item['allocation_id']){
+                        $tmp_layer_name=$item['layer_name'];
+                        break;
+                    }
+                }
+                $allocations[$key]['factors'][$factor['factor_id']]=$tmp_layer_name;
+            }
+        }
+        //echo "\n\n\n";
+        //var_dump($allocations);
+
+        $data['study']=$study;
+        $data['factors']=$factors;
+        $data['allocations']=$allocations;
+        $data['links']['edit']=site_url("/study/edit/".$study_id);
+        $data['links']['detail_link']=site_url("/study/".$study_id);
+        $data['links']['factors']=site_url("factor/?study_id=".$study_id);
+        $data['links']['view']=site_url("/study/");
+        $data['links']['add']=site_url("/study/add");
+        $data['links']['factor_add']=site_url('factor/add?study_id='.$study_id);
+        $data['links']['groups_edit_link']=site_url("/study/group?study_id=".$study_id);
+
+        $data['link']['add_new']=site_url('/allocation/add?study_id='.$study_id);
+        $data['link']['view']=site_url('/allocation');
+        $data=array_merge($this->data,$data);
+        $this->load->view('allocation/history',$data);
+    }
+
+
+    private function find_allocation(){
+        //
     }
 
 

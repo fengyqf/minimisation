@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?>
 					</a>
 					<a class="btn btn-default" role="button" href="<?php echo $link['correct']; ?>"><?php echo lang('allocation_fix_add');?></a>
-					<a class="btn btn-default" role="button" href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('allocations');?></a>
+					<a class="btn btn-default" role="button" href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('g_allocations');?></a>
 				</div>
 			</div>
 		</fieldset>
