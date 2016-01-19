@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<dd><input name="weight" type="text" value="<?php echo $factor['weight'];?>">(number)</dd>
 				<dt></dt>
 				<dd>
-					<input type="submit" name="Submit" value="<?php echo lang('submit');?>">
+					<button type="submit" class="btn btn-default"><?php echo lang('submit');?></button>
 					<input name="id" type="hidden" value="<?php echo $factor['factor_id'];?>">
 				</dd>
 			</dl>
