@@ -70,8 +70,6 @@ foreach($factors as $factor){
 <?php
 }
 ?>
-              <th>&nbsp;</th>
-              <th>&nbsp;</th>
             </tr>
             <tr>
               <th><?php echo lang('g_layers');?></th>
@@ -85,8 +83,6 @@ foreach($factors as $factor){
 		}
 }
 ?>
-              <th>&nbsp;</th>
-              <th>&nbsp;</th>
             </tr>
 <?php
 foreach($groups as $group_id => $group){
@@ -103,8 +99,6 @@ foreach($groups as $group_id => $group){
 		}
 	}
 ?>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
             </tr>
 <?php
 }
