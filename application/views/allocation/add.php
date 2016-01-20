@@ -37,8 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="alert alert-warning" role="alert"><?php echo $flash; ?></div>
 <?php } ?>
 
-
-
+<?php if(1==2){?>
 	<fieldset>
 		<legend><?php echo lang('layer_of_every_factor');?></legend>
 <?php foreach($factors as $factor_id => $factor){ ?>
@@ -50,6 +49,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<option value="<?php echo $layer['layer_id'];?>"><?php echo $layer['layer_name'];?></option>
 	<?php } ?>
 				</select>
+			</div>
+		</div>
+<?php } ?>
+	</fieldset>
+<?php } ?>
+	<fieldset>
+		<legend><?php echo lang('layer_of_every_factor');?></legend>
+<?php foreach($factors as $factor_id => $factor){ ?>
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-2 control-label"><?php echo $factor['factor_name']; ?></label>
+			<div class="col-sm-10">
+	<?php foreach($factor['layers'] as $layer){ ?>
+			    <label for="factors_<?php echo $layer['layer_id']; ?>" style="margin:0 10px 0 0;">
+			    <input type="radio" name="factors[<?php echo $factor_id; ?>]" id="factors_<?php echo $layer['layer_id']; ?>" value="<?php echo $layer['layer_id'];?>">
+			    <?php echo $layer['layer_name'];?></label>
+	<?php } ?>
 			</div>
 		</div>
 <?php } ?>
