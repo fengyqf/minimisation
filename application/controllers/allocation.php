@@ -69,6 +69,7 @@ class Allocation extends CI_Controller {
         $study['edit_link']=site_url('study/edit/'.$study['id']);
         $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
         $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
+        $study['allocation_history_link']=site_url('allocation/history?study_id='.$study['id']);
         $data['study']=$study;
         $data['factors']=$factors;
         $data['groups']=$groups;
@@ -148,6 +149,7 @@ class Allocation extends CI_Controller {
         $study['edit_link']=site_url('study/edit/'.$study['id']);
         $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
         $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
+        $study['allocation_history_link']=site_url('allocation/history?study_id='.$study['id']);
         $data['study']=$study;
         $data['links']['edit']=site_url("/study/edit/".$study_id);
         $data['links']['detail_link']=site_url("/study/".$study_id);
@@ -417,6 +419,8 @@ class Allocation extends CI_Controller {
     public function history(){
         $study_id=(int)($this->input->get('study_id'));
         $page=(int)($this->input->get('page'));
+        $pagesize=$this->config->item('allocation_history_pagesize');
+        //echo "\n\n$pagesize\n\n\n";
         if($page<=0){
             $page=1;
         }
@@ -468,32 +472,50 @@ class Allocation extends CI_Controller {
         //var_dump($fl_data);
         */
 
-        $a2l=array();
-        $this->db->select('a2l.`allocation_id`,f.id AS factor_id,f.name AS factor_name,a2l.`layer_id`,l.name AS layer_name')
-                 ->from('allocation2layer a2l')
-                 ->join('layer l','l.id = a2l.layer_id','join')
-                 ->join('factor f','f.id = l.factor_id')
-                 ->where('f.study_id',$study_id)
-                 ->order_by('a2l.id','asc');
-        $query=$this->db->get();
-        foreach ($query->result_array() as $row) {
-            $a2l[]=$row;
-        }
-        //var_dump($a2l);
 
         $allocations=array();
+        //echo "page: $page     pagesize:$pagesize\n\n\n";
+        //计算allocation总条数
+        $this->db->from('allocation')
+                 ->where_in('group_id', $groups ? array_keys($groups) : 0);
+        $rs_count=$this->db->count_all_results();
+        //var_dump($this->db->last_query());
+        //echo("\n\nallocation count: $rs_count\n\n");
         //按分页读取相应的allocation记录，然后逐条记录 按该study的factor增加相应layer数据
-        $this->db->select('id,name,from_unixtime(time) as time')
+        $this->db->select('id,name,from_unixtime(time) as time,group_id')
                  ->from('allocation')
                  ->where_in('group_id', $groups ? array_keys($groups) : 0)
-                 ->order_by('id','desc')
-                 ->limit(($page-1),50);
+                 ->order_by('id','desc');
+        //$this->db->limit($pagesize,($page-1)*$pagesize);
+        if($page > 1 ){
+            $this->db->limit($pagesize, ($page-1)*$pagesize);
+        }else{
+            $this->db->limit($pagesize);
+        }
         $query=$this->db->get();
+        //var_dump($this->db->last_query());
         foreach ($query->result_array() as $row) {
+            $row['group_name']=isset($groups[$row['group_id']]) ? $groups[$row['group_id']]['group_name'] : lang('unknown_group');
             $allocations[$row['id']]=$row;
         }
-        //var_dump($this->db->last_query());
         //var_dump($allocations);
+        $a2l=array();
+        if($allocations){
+            $this->db->select('a2l.`allocation_id`,f.id AS factor_id,f.name AS factor_name,a2l.`layer_id`,l.name AS layer_name')
+                     ->from('allocation2layer a2l')
+                     ->join('layer l','l.id = a2l.layer_id','join')
+                     ->join('factor f','f.id = l.factor_id')
+                     ->where('f.study_id',$study_id)
+                     ->where_in('a2l.allocation_id',array_keys($allocations))
+                     ->order_by('a2l.id','asc');
+            $query=$this->db->get();
+            foreach ($query->result_array() as $row) {
+                $a2l[]=$row;
+            }
+            //var_dump($this->db->last_query());
+            //var_dump($a2l);
+        }
+
         foreach ($allocations as $key => $allocation) {
             //计算每个allocation在各个factor上分配的layer_name，从fl_data中
             foreach ($factors as $factor) {
@@ -511,6 +533,23 @@ class Allocation extends CI_Controller {
         //echo "\n\n\n";
         //var_dump($allocations);
 
+        $this->load->library('pagination');
+        $page_config['base_url'] = site_url('allocation/history?study_id='.$study_id.'');
+        $page_config['total_rows'] = $rs_count;
+        $page_config['per_page'] = $pagesize;
+        $page_config['use_page_numbers']=TRUE;
+        $page_config['enable_query_strings'] = TRUE;
+        $page_config['page_query_string'] = TRUE;
+        $page_config['query_string_segment']='page';
+        $page_config['first_link'] = '&laquo;';
+        $page_config['last_link'] = '&raquo;';
+        $this->pagination->initialize($page_config); 
+
+        $pagebar= $this->pagination->create_links();
+
+        $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
+        $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
+        $study['allocation_history_link']=site_url('allocation/history?study_id='.$study['id']);
         $data['study']=$study;
         $data['factors']=$factors;
         $data['allocations']=$allocations;
@@ -524,6 +563,9 @@ class Allocation extends CI_Controller {
 
         $data['link']['add_new']=site_url('/allocation/add?study_id='.$study_id);
         $data['link']['view']=site_url('/allocation');
+        $data['pagebar']=$pagebar;
+        $data['pagesize']=$pagesize;
+        $data['rs_count']=$rs_count;
         $data=array_merge($this->data,$data);
         $this->load->view('allocation/history',$data);
     }

@@ -63,6 +63,8 @@ $lang['addition_name'] = "Name";
 $lang['text_addition_name_notice'] = "blank allowed, auto fill.";
 $lang['aim_group'] = "Aim Group";
 $lang['next_step'] = "Next";
+$lang['allocation_history'] = "Allocation History";
+$lang['unknown_group'] = "unknown";
 
 $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';
@@ -71,7 +73,7 @@ $lang['text_study_group_notice']='input all the groups below, each in one box; b
 $lang['allocation_fix_add']='Mistaken? Correct It';
 $lang['confirm_allocate'] = "Do Allocate";
 $lang['allocation_correct_notice']='this Allocation was cleared, input and allocate again please.';
-$lang['allocate_time'] = "Allocation Time";
+$lang['allocate_time'] = "Allocate Time";
 
 //factor
 $lang['factor_name']='Factor Name';

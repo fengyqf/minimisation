@@ -111,9 +111,10 @@ foreach($groups as $group_id => $group){
 ?>
           </table>
 		</div>
-		<a class="btn btn-default" href="<?php echo $study['allocation_add_link']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?></a>
 	  </div>
 	</div>
+	<a class="btn btn-default" href="<?php echo $study['allocation_history_link']; ?>" role="button"><span class="glyphicon glyphicon-time" aria-hidden="true"></span><?php echo lang('allocation_history');?></a>
+	<a class="btn btn-default" href="<?php echo $study['allocation_add_link']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?></a>
 
 
 </div>

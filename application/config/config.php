@@ -515,3 +515,4 @@ $config['proxy_ips'] = '';
 
 $config['site_name'] = 'Minimisation';
 $config['default_bias'] = 0.8;
+$config['allocation_history_pagesize'] = 20;
