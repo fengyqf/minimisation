@@ -203,6 +203,7 @@ class Study extends CI_Controller {
             $row['factors_link']=site_url('factor/?study_id='.$row['id']);
             $row['layers_link']=site_url('layer/?study_id='.$row['id']);
             $row['allocations_link']=site_url('allocation/?study_id='.$row['id']);
+            $row['allocation_add_link']=site_url('allocation/add?study_id='.$row['id']);
             $row['bias']=$row['bias']/100;
             $study=$row;
         }else{

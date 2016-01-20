@@ -80,6 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  </div>
 	</div>
 
+	<a class="btn btn-default" href="<?php echo $study['allocation_add_link']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?></a>
 
 
 
