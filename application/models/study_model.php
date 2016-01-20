@@ -62,4 +62,11 @@ class Study_model extends CI_Model {
         $rs_count=$this->db->count_all_results();
         return $rs_count;
     }
+
+
+    public function get_factor_count($study_id=0){
+        $this->db->from('factor')
+                 ->where('study_id',$study_id);
+        return $this->db->count_all_results();
+    }
 }

@@ -176,7 +176,7 @@ class Allocation extends CI_Controller {
             date_default_timezone_set('Asia/Shanghai');
             $allocation_name='Anonymous ('.date('YmdHis').')';
         }
-        $factors=($this->input->post('factors'));
+        $factors=$this->input->post('factors');
         //检测当前操作用户是否有操作study_id的权限
         $this->load->model('study_model');
         $study=$this->study_model->get($study_id);
@@ -187,6 +187,10 @@ class Allocation extends CI_Controller {
             $study_group_count=$study['group_count'];
             $study_owner_uid=$study['owner_uid'];
             $study_bias=(int)$study['bias'];     //1-100的整数
+            $study_factor_count=(int)$this->study_model->get_factor_count($study_id);
+        }
+        if( !is_array($factors) or count($factors) < $study_factor_count){
+            redirect('allocation/add?study_id='.$study_id.'&flash='.lang('text_allocation_add_factor_count_error_notice'));
         }
 
         $this->db
@@ -277,7 +281,8 @@ class Allocation extends CI_Controller {
                     //TODO 严格起见，这里有必要判断一下weight的值是否为0，对于为0给出警报
                 }else{
                     //严重错误（算法缺陷）：指定的layer不存在；需要调试并改进算法
-                    die('Error! 算法缺陷');
+                    //die('Error! 算法缺陷');
+                    redirect('allocation/add?study_id='.$study_id.'&flash='.lang('text_allocation_add_factor_to_layer_error_notice'));
                 }
                 $group_sum_sd[$group_id]+=$weight*$sd;
             }
