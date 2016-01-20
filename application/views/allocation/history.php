@@ -53,10 +53,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           </table>
 		  <?php echo $pagebar;?>
 		</div>
-		
-		<div>
-		</div>
-
+<?php if($empty_factor_allocation_exists){ ?>
+		<p><?php echo lang('text_empty_factor_allocation_exists_notice');?></p>
+<?php } ?>
 	  </div>
 	</div>
 	<a class="btn btn-default" href="<?php echo $study['allocation_history_link']; ?>" role="button"><span class="glyphicon glyphicon-time" aria-hidden="true"></span><?php echo lang('allocation_history');?></a>

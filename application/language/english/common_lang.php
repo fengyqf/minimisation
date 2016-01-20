@@ -74,6 +74,7 @@ $lang['allocation_fix_add']='Mistaken? Correct It';
 $lang['confirm_allocate'] = "Do Allocate";
 $lang['allocation_correct_notice']='this Allocation was cleared, input and allocate again please.';
 $lang['allocate_time'] = "Allocate Time";
+$lang['text_empty_factor_allocation_exists_notice'] = "Allocation with an empty layer, means that you deleted a factor yet. ";
 
 //factor
 $lang['factor_name']='Factor Name';
@@ -85,3 +86,4 @@ $lang['layers_in_%s']='Edit Layers in <strong>%s</strong>';
 $lang['text_factor_layers_edit_notice']="input all the Layers in this factor below, each in one box; blank box will be ignored.<br>to delete a layer, just delete it and submit.";
 $lang['numeric_required']='numeric required';
 $lang['text_factors_none_notice']='None factor added, You must add severial factors; And you must add at least 2 layers for each factor';
+$lang['text_factors_page_notice']='If you have allocated items, do NOT delete any factor, or the new allocation will be not presise!';

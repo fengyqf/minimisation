@@ -52,4 +52,14 @@ class Study_model extends CI_Model {
         //$this->db->
         //
     }
+
+
+    public function get_allocation_count($study_id=0){
+        //计算allocation总条数
+        $this->db->from('allocation a')
+                 ->join('group g','g.id=a.group_id','inner')
+                  ->where('g.study_id',$study_id);
+        $rs_count=$this->db->count_all_results();
+        return $rs_count;
+    }
 }

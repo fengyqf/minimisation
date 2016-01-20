@@ -40,6 +40,7 @@ class Allocation extends CI_Controller {
         if($this->operate_user_id!=$study['owner_uid']){
             redirect('study/');
         }
+        $rs_count=$this->study_model->get_allocation_count($study_id);
 
         $this->db
             ->select('id,name')
@@ -61,11 +62,6 @@ class Allocation extends CI_Controller {
         }
         //var_dump($factors);
         //die();
-
-        //计算allocation总条数
-        $this->db->from('allocation')
-                 ->where_in('group_id', $groups ? array_keys($groups) : 0);
-        $rs_count=$this->db->count_all_results();
 
         $study['groups_link']=site_url('study/group?study_id='.$study['id']);
         $study['factors_link']=site_url('factor/?study_id='.$study['id']);
@@ -435,6 +431,7 @@ class Allocation extends CI_Controller {
         if(!isset($study['owner_uid']) or $study['owner_uid']!=$this->operate_user_id){
             redirect('study/');
         }
+        $rs_count=$this->study_model->get_allocation_count($study_id);
         $groups=array();
         $this->db->select('id,name')
                  ->from('group')
@@ -480,13 +477,6 @@ class Allocation extends CI_Controller {
 
 
         $allocations=array();
-        //echo "page: $page     pagesize:$pagesize\n\n\n";
-        //计算allocation总条数
-        $this->db->from('allocation')
-                 ->where_in('group_id', $groups ? array_keys($groups) : 0);
-        $rs_count=$this->db->count_all_results();
-        //var_dump($this->db->last_query());
-        //echo("\n\nallocation count: $rs_count\n\n");
         //按分页读取相应的allocation记录，然后逐条记录 按该study的factor增加相应layer数据
         $this->db->select('id,name,from_unixtime(time) as time,group_id')
                  ->from('allocation')
@@ -522,18 +512,26 @@ class Allocation extends CI_Controller {
             //var_dump($a2l);
         }
 
+        $empty_factor_allocation_exists=0;
         foreach ($allocations as $key => $allocation) {
             //计算每个allocation在各个factor上分配的layer_name，从fl_data中
             foreach ($factors as $factor) {
                 //factor
-                $tmp_layer_name='???';
+                $tmp_layer_name='';
+                $found=0;
                 foreach($a2l as $item){
                     if($item['factor_id']==$factor['factor_id'] && $allocation['id']==$item['allocation_id']){
                         $tmp_layer_name=$item['layer_name'];
+                        $found=1;
                         break;
                     }
                 }
-                $allocations[$key]['factors'][$factor['factor_id']]=$tmp_layer_name;
+                if($found){
+                    $allocations[$key]['factors'][$factor['factor_id']]= $tmp_layer_name ;
+                }else{
+                    $empty_factor_allocation_exists++;
+                }
+
             }
         }
         //echo "\n\n\n";
@@ -559,6 +557,7 @@ class Allocation extends CI_Controller {
         $data['study']=$study;
         $data['factors']=$factors;
         $data['allocations']=$allocations;
+        $data['empty_factor_allocation_exists']=$empty_factor_allocation_exists;
         $data['links']['edit']=site_url("/study/edit/".$study_id);
         $data['links']['detail_link']=site_url("/study/".$study_id);
         $data['links']['factors']=site_url("factor/?study_id=".$study_id);

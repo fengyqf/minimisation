@@ -68,6 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php } ?>
 		  </tbody>
 		</table>
+		<div class="alert alert-info" role="alert"><?php echo lang('text_factors_page_notice');?></div>
 <?php }else{ ?>
 		<div class="alert alert-warning" role="alert"><?php echo lang('text_factors_none_notice');?></div>
 <?php } ?>
