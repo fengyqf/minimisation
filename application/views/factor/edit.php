@@ -15,7 +15,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <li><a href="<?php echo site_url("/"); ?>"><?php echo lang('g_home');?></a></li>
 	  <li><a href="<?php echo site_url("study/"); ?>"><?php echo lang('g_studies');?></a></li>
 	  <li><a href="<?php echo $links['detail_link']; ?>"><?php echo $study['name'];?></a></li>
-	  <li class="active"><?php echo lang('g_factors');?></li>
+	  <li><a href="<?php echo $links['factors']; ?>"><?php echo lang('g_factors');?></a></li>
+	  <li class="active"><?php echo lang('edit');?>: <?php echo $factor['factor_name'];?></li>
 	</ol>
 
     <h1><?php echo $study['name']; ?></h1>

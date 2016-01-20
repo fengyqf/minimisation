@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</ul>
 
 	<div class="panel panel-default">
-	  <div class="panel-heading"><?php echo lang('current_allocations');?></div>
+	  <div class="panel-heading"><?php echo lang('current_allocations');?> <span class="badge"><?php echo $rs_count; ?></span></div>
 	  <div class="panel-body">
 <?php if(1==2){ ?>
 		<dl>

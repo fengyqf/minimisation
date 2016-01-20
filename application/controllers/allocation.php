@@ -62,6 +62,11 @@ class Allocation extends CI_Controller {
         //var_dump($factors);
         //die();
 
+        //计算allocation总条数
+        $this->db->from('allocation')
+                 ->where_in('group_id', $groups ? array_keys($groups) : 0);
+        $rs_count=$this->db->count_all_results();
+
         $study['groups_link']=site_url('study/group?study_id='.$study['id']);
         $study['factors_link']=site_url('factor/?study_id='.$study['id']);
         $study['layers_link']=site_url('layer/?study_id='.$study['id']);
@@ -73,6 +78,7 @@ class Allocation extends CI_Controller {
         $data['study']=$study;
         $data['factors']=$factors;
         $data['groups']=$groups;
+        $data['rs_count']=$rs_count;
         $data['links']['edit']=site_url("/study/edit/".$study_id);
         $data['links']['detail_link']=site_url("/study/".$study_id);
         $data['links']['factors']=site_url("factor/?study_id=".$study_id);
