@@ -68,6 +68,7 @@ $lang['allocation_history'] = "Allocation History";
 $lang['unknown_group'] = "unknown";
 
 $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
+$lang['mesg_factors_only_one']='Only ONE factor, Minimisation degenerate to simple random';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';
 $lang['text_allocation_add_factor_count_error_notice']='All the factors MUST have a Layer.';
 $lang['text_allocation_add_factor_to_layer_error_notice']='Each factor must has a right layer';

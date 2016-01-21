@@ -128,11 +128,17 @@ class Allocation extends CI_Controller {
         }
         //var_dump($factors);
         //检测factor及layer的完整性，不完整则显示flash消息
-        if(count($factors)<2){
-            if($flash){
-                $flash.='<br>'.lang('mesg_factors_not_enough');
+        $factors_count=count($factors);
+        if($factors_count<2){
+            if($factors_count==1){
+                $tmp_mesg=lang('mesg_factors_only_one');
             }else{
-                $flash=lang('mesg_factors_not_enough');
+                $tmp_mesg=lang('mesg_factors_not_enough');
+            }
+            if($flash){
+                $flash.='<br>'.$tmp_mesg;
+            }else{
+                $flash=$tmp_mesg;
             }
         }
         foreach ($factors as $factor) {
