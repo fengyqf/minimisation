@@ -151,7 +151,7 @@ class Study extends CI_Controller {
         }
         //var_dump($bias);
         if($bias<=0){
-            $bias=$this->config->item('default_bias');
+            $bias=$this->config->item('default_bias') * 100;
         }
         $data=array(
             'name'=>$name,
@@ -231,6 +231,7 @@ class Study extends CI_Controller {
                  ->order_by('id','asc');
         $query=$this->db->get();
         foreach ($query->result_array() as $row) {
+            $row['weight']=$row['weight']/100;
             $data_factors[$row['factor_id']]=$row;
             $factor_ids[]=$row['factor_id'];
         }

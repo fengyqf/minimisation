@@ -81,6 +81,7 @@ class Factor extends CI_Controller {
         $query=$this->db->get();
         if($factor=$query->row_array()){
             //加载当前study基础数据
+            $factor['weight']=$factor['weight']/100;
             $study_id=$factor['study_id'];
             $this->load->model('study_model');
             $study=$this->study_model->get($study_id);
@@ -111,12 +112,14 @@ class Factor extends CI_Controller {
             redirect('study/');
         }else{
             $name=$this->input->post('name');
-            $weight=(int)$this->input->post('weight');
+            $weight=$this->input->post('weight');
             if(!$name){
-                $name="new factor";
+                $name=lang('new_factor_default_name');
             }
             if(!$weight){
-                $weight=1;
+                $weight=(int)($this->config->item('factor_default_weight') * 100);
+            }else{
+                $weight=(int)($weight * 100);
             }
             $this->db->insert('factor',array(
                 'study_id'=>$study_id,
@@ -133,13 +136,15 @@ class Factor extends CI_Controller {
     public function edit_save(){
         $id=(int)($this->input->get_post('id'));
         $name=$this->input->post('name');
-        $weight=(int)($this->input->post('weight'));
+        $weight=$this->input->post('weight');
         $study_id=0;
         if(!$name){
-            $name="new factor";
+            $name=lang('new_factor_default_name');
         }
         if(!$weight){
-            $weight=1;
+            $weight=(int)($this->config->item('factor_default_weight') * 100);
+        }else{
+            $weight=(int)($weight * 100);
         }
         $this->db
              ->select('f.id as factor_id,f.name as factor_name,f.weight,f.study_id')
@@ -277,9 +282,9 @@ class Factor extends CI_Controller {
                         $this->db->trans_start();
                         //删除相关layer的记录: a2l,l两表
                         $this->db->delete('allocation2layer',array('layer_id'=>$row['layer_id']));
-                        var_dump($this->db->last_query());
+                        //var_dump($this->db->last_query());
                         $this->db->delete('layer',array('id'=>$row['layer_id']));
-                        var_dump($this->db->last_query());
+                        //var_dump($this->db->last_query());
                         $this->db->trans_complete();
                     }
                     //var_dump($layers,$layer_new);

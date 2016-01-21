@@ -53,6 +53,7 @@ class Factor_model extends CI_Model {
         $this->db->order_by('id','asc')->limit(100);    //假定最大100个factors
         $query=$this->db->get();
         foreach ($query->result_array() as $row) {
+            $row['weight']=$row['weight']/100;
             $row['layers_link']=site_url('factor/layer?factor_id='.$row['factor_id']);
             $row['del_link']=site_url('factor/del/'.$row['factor_id']);
             $row['edit_link']=site_url('factor/edit/'.$row['factor_id']);

@@ -16,7 +16,7 @@ $lang['g_home']  = "Home Page";
 
 $lang['g_bias'] = "Bias Probability destribution";
 $lang['bias'] = "Bias";
-$lang['text_bias_note'] = "0.5~1";
+$lang['text_bias_note'] = "keep it, if you have no idea";
 $lang['default_study_name'] = "New Study";
 
 $lang['g_study_name'] = "Study Name";
@@ -80,6 +80,7 @@ $lang['text_empty_factor_allocation_exists_notice'] = "Allocation with an empty 
 
 //factor
 $lang['factor_name']='Factor Name';
+$lang['new_factor_default_name']='New Factor';
 $lang['current_factor_and_layers']='Current Factors and Layers';
 $lang['text_no_layer_notice']='None, check Edit to set';
 $lang['text_factor_delete_confirm_notice']='Layers in this Factor and the Allocations will LOST, Are You Sure Delete It?';
