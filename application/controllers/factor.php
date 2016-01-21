@@ -21,8 +21,11 @@ class Factor extends CI_Controller {
     public function __construct(){
         parent::__construct();
 
-        //当前操作的用户，可以挂接任何用户系统
-        $this->operate_user_id=7;
+        //当前操作的用户，用户id号的逻辑在 mnmssession_model 实现
+        $this->load->model('mnmssession_model');
+        $this->mnmssession_model->init();
+        $this->operate_user_id=$this->mnmssession_model->operate_user_id;
+
         $this->load->database('default');
         $this->lang->load('common');
 
