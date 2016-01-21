@@ -16,8 +16,8 @@ $lang['g_group']  = "Group";
 $lang['g_groups'] = "Groups";
 $lang['g_home']  = "Home Page";
 
-$lang['g_bias'] = "Bias Probability destribution";
-$lang['bias'] = "Bias";
+$lang['g_bias'] = "Assignment probabilities";
+$lang['bias'] = "Assignment probabilities";
 $lang['text_bias_note'] = "keep it, if you have no idea";
 $lang['default_study_name'] = "New Study";
 
