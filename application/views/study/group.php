@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <?php echo $bootstrap; ?>
-<title>Groups - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
+<title><?php echo lang('g_groups');?> - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
 <script language="javascript">
 	$(document).ready(function(){
 		var it='<li>'+ $('#box_groups > li:last').html() +'</li>';

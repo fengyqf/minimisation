@@ -36,6 +36,7 @@ $lang['confirm'] = "Confirm";
 $lang['view'] = "View";
 $lang['add'] = "Add";
 $lang['detail'] = "Detail";
+$lang['name'] = "Name";
 
 
 //study
