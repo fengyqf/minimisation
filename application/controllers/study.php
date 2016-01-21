@@ -27,8 +27,9 @@ class Study extends CI_Controller {
         $this->operate_user_id=$this->mnmssession_model->operate_user_id;
 
         $this->load->database('default');
-        //$this->load->helper('language');
-        $this->lang->load('common');
+
+        $lang=$this->input->cookie('lang',TRUE);
+        $this->lang->load('common',$lang);
 
         $this->study_id=(int)($this->input->get('study_id'));
         //检测当前操作用户是否有操作study_id的权限

@@ -39,6 +39,8 @@ $lang['view'] = "View";
 $lang['add'] = "Add";
 $lang['detail'] = "Detail";
 $lang['name'] = "Name";
+$lang['welcome'] = "Welcome";
+$lang['my_studies'] = "My Studies";
 
 
 //study

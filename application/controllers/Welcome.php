@@ -18,8 +18,38 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+    public function __construct(){
+        parent::__construct();
+
+        //当前操作的用户，用户id号的逻辑在 mnmssession_model 实现
+        $this->load->model('mnmssession_model');
+        $this->mnmssession_model->init();
+        $this->operate_user_id=$this->mnmssession_model->operate_user_id;
+
+        $lang=$this->input->cookie('lang',TRUE);
+        $this->lang->load('common',$lang);
+
+        $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
+        $this->data['site_name']=lang('site_name');
+    }
+
+
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		//set language
+		if($lang=$this->input->get('lang')){
+			if(strlen($lang)<20){
+				$cookie=array('name'=>'lang',
+					'value'=>$lang,
+					'expire'=>'864000',
+					'path'=>'/',
+					);
+				$this->input->set_cookie($cookie);
+			}
+	        $this->lang->load('common',$lang);
+		}
+		$data=array();
+        $data=array_merge($this->data,$data);
+		$this->load->view('welcome_message',$data);
 	}
 }

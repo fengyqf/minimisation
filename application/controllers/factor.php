@@ -27,7 +27,9 @@ class Factor extends CI_Controller {
         $this->operate_user_id=$this->mnmssession_model->operate_user_id;
 
         $this->load->database('default');
-        $this->lang->load('common');
+
+        $lang=$this->input->cookie('lang',TRUE);
+        $this->lang->load('common',$lang);
 
         $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
         $this->data['site_name']=lang('site_name');
