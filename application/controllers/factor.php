@@ -30,7 +30,7 @@ class Factor extends CI_Controller {
         $this->lang->load('common');
 
         $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
-        $this->data['site_name']=$this->config->item('site_name');
+        $this->data['site_name']=lang('site_name');
     }
 
 

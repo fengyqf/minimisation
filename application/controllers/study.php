@@ -46,7 +46,7 @@ class Study extends CI_Controller {
             $this->study_id=0;
         }
         $this->data['bootstrap']=$this->load->view('part/bootstrap', NULL, true);
-        $this->data['site_name']=$this->config->item('site_name');
+        $this->data['site_name']=lang('site_name');
     }
 
 

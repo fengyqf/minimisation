@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 //general name
+$lang['site_name'] = 'Minimisation';
+
 $lang['g_study']  = "Study";
 $lang['g_studies'] = "Studies";
 $lang['g_factor']  = "Factor";
