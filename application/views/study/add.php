@@ -32,10 +32,11 @@ if($study['study_id']==0){
 	//	add
 ?>
 	<ul class="nav nav-tabs">
+	  <li role="presentation" class="disabled"><a href="<?php echo $links['detail_link']; ?>"><?php echo lang('details');?></a></li>
 	  <li role="presentation" class="active"><a href="<?php echo $links['edit']; ?>"><?php echo lang('settings');?></a></li>
-	  <li role="presentation"><a href="<?php echo $links['groups_edit_link']; ?>"><?php echo lang('g_groups');?></a></li>
-	  <li role="presentation"><a href="<?php echo $links['factors']; ?>"><?php echo lang('g_factors');?></a></li>
-	  <li role="presentation"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('g_allocations');?></a></li>
+	  <li role="presentation" class="disabled"><a href="<?php echo $links['groups_edit_link']; ?>"><?php echo lang('g_groups');?></a></li>
+	  <li role="presentation" class="disabled"><a href="<?php echo $links['factors']; ?>"><?php echo lang('g_factors');?></a></li>
+	  <li role="presentation" class="disabled"><a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo lang('g_allocations');?></a></li>
 	</ul>
 <?php
 }else{
