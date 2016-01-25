@@ -542,9 +542,8 @@ class Allocation extends CI_Controller {
                         break;
                     }
                 }
-                if($found){
-                    $allocations[$key]['factors'][$factor['factor_id']]= $tmp_layer_name ;
-                }else{
+                $allocations[$key]['factors'][$factor['factor_id']]= $tmp_layer_name ;
+                if(!$found){
                     $empty_factor_allocation_exists++;
                 }
 
