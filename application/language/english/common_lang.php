@@ -15,9 +15,13 @@ $lang['g_allocations'] = "Allocations";
 $lang['g_group']  = "Group";
 $lang['g_groups'] = "Groups";
 $lang['g_home']  = "Home Page";
+$lang['g_center'] = "Center";
+$lang['g_centers'] = "Centers";
 
 $lang['g_bias'] = "Assignment probabilities";
 $lang['bias'] = "Assignment probabilities";
+$lang['access_token'] = "Access token";
+$lang['separated_by_center'] = "Separated by centers";
 $lang['text_bias_note'] = "keep it, if you have no idea";
 $lang['default_study_name'] = "New Study";
 
@@ -41,6 +45,9 @@ $lang['detail'] = "Detail";
 $lang['name'] = "Name";
 $lang['welcome'] = "Welcome";
 $lang['my_studies'] = "My Studies";
+$lang['username'] = "UserName";
+$lang['password'] = "Password";
+$lang['login'] = "Login";
 
 
 //study
@@ -70,12 +77,16 @@ $lang['aim_group'] = "Aim Group";
 $lang['next_step'] = "Next";
 $lang['allocation_history'] = "Allocation History";
 $lang['unknown_group'] = "unknown";
+$lang['input_center_name'] = "Input center name";
+$lang['center_name_blank'] = "Blank Name";
 
 $lang['mesg_factors_not_enough']='Factors not enough, 2 at least';
 $lang['mesg_factors_only_one']='Only ONE factor, Minimisation degenerate to simple random';
 $lang['mesg_layers_not_enough_in_%s']='Layers not enough in <strong>%s</strong>';
 $lang['text_allocation_add_factor_count_error_notice']='All the factors MUST have a Layer.';
 $lang['text_allocation_add_factor_to_layer_error_notice']='Each factor must has a right layer';
+$lang['text_input_center_name'] = "new center name, or existed one are allowed. existed name will be classified";
+$lang['text_center_blank_error_notice'] = "check one of the centers, or type in the box ";
 
 $lang['text_study_group_notice']='input all the groups below, each in one box; blank box will be ignored.<br>to delete a group, just delete it and submit.';
 $lang['allocation_fix_add']='Mistaken? Correct It';

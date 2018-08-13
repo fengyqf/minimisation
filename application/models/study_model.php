@@ -29,7 +29,7 @@ class Study_model extends CI_Model {
     public function get($study_id=NULL){
         //检测当前操作用户是否有操作study_id的权限
         $this->db
-            ->select('id,name,bias,group_count,owner_uid,from_unixtime(time) as time')
+            ->select('id,name,bias,group_count,owner_uid,separated_by_center,access_token,from_unixtime(time) as time')
             ->from('study')
             ->where('id',$study_id)
             ->limit(1);
@@ -43,7 +43,9 @@ class Study_model extends CI_Model {
             $study['name']=NULL;
             $study['bias']=0;
             $study['owner_uid']=-1;
+            $study['separated_by_center']=0;
             $study['time']='';
+            $study['access_token']=NULL;
         }
         return $study;
     }
@@ -69,4 +71,62 @@ class Study_model extends CI_Model {
                  ->where('study_id',$study_id);
         return $this->db->count_all_results();
     }
+
+
+    public function get_centers($study_id=NULL){
+        $this->db
+             ->select('id as center_id,name as center_name')
+             ->from('center')
+             ->where('study_id',$study_id);
+
+        $query=$this->db->get();
+        $centers=array();
+        foreach($query->result_array() as $row) {
+            $centers[$row['center_id']]=$row;
+        }
+        return $centers;
+    }
+
+    public function get_center_by_name($study_id=NULL,$name=''){
+        $name= is_null($name) ? '' : trim($name);
+        $this->db
+             ->select('id,name')
+             ->from('center')
+             ->where('study_id',$study_id)
+             ->where('name',$name);
+        $query=$this->db->get();
+        if($query->num_rows()==0){
+            $data=array('study_id'=>$study_id,'name'=>$name);
+            $this->db->insert('center',$data);
+            $insert_id=$this->db->insert_id();
+            return array('center_id'=>$insert_id,'center_name'=>$name);
+        }else{
+            $row=$query->row_array();
+            return array('center_id'=>$row['id'],'center_name'=>$row['name']);
+        }
+    }
+
+    public function get_center_id_by_name($study_id=NULL,$name=''){
+        $center=$this->get_center_by_name($study_id,$name);
+        return $center['center_id'];
+    }
+
+    public function get_study_id_by_access_token($access_token){
+        if(!$access_token or count($access_token) < 10){
+            return 0;
+        }
+        $this->db
+             ->select('id,name')
+             ->from('study')
+             ->where('access_token',$access_token);
+        $query=$this->db->get();
+        if($query->num_rows()==0){
+            return 0;
+        }else{
+            $row=$query->row_array();
+            return $row['id'];
+        }
+    }
+
 }
+

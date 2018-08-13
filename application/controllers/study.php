@@ -34,7 +34,7 @@ class Study extends CI_Controller {
         $this->study_id=(int)($this->input->get('study_id'));
         //检测当前操作用户是否有操作study_id的权限
         $this->db
-            ->select('id,name,bias,group_count,owner_uid')
+            ->select('id,name,bias,group_count,owner_uid,separated_by_center,access_token,access_token')
             ->from('study')
             ->where('owner_uid',$this->operate_user_id)
             ->where('id',$this->study_id)
@@ -55,7 +55,7 @@ class Study extends CI_Controller {
     {
         //注意检测当前操作用户是否有操作study_id的权限
         $this->db
-            ->select('id,name,bias,group_count,owner_uid,from_unixtime(time) as time')
+            ->select('id,name,bias,group_count,owner_uid,separated_by_center,access_token,from_unixtime(time) as time')
             ->from('study')
             ->where('owner_uid',$this->operate_user_id)
             ->order_by('id','desc');
@@ -104,6 +104,8 @@ class Study extends CI_Controller {
                 'name'=>isset($default_data['name']) ? $default_data['name'] : '' ,
                 'bias'=>isset($default_data['bias']) ? $default_data['bias'] : '0.8',
                 'group_count'=>isset($default_data['group_count']) ? $default_data['group_count'] : 2,
+                'separated_by_center'=>isset($default_data['separated_by_center']) ? $default_data['separated_by_center'] : '' ,
+                'access_token'=>isset($default_data['access_token']) ? $default_data['access_token'] : '',
                 );
         }
 
@@ -153,6 +155,8 @@ class Study extends CI_Controller {
         if(!$name){
             $name=lang('default_study_name');
         }
+        $separated_by_center=(int)($this->input->post('separated_by_center') > 0);
+        $access_token=$this->input->post('access_token');
         //var_dump($bias);
         if($bias<=0){
             $bias=$this->config->item('default_bias') * 100;
@@ -162,6 +166,8 @@ class Study extends CI_Controller {
             'bias'=>$bias,
             'time'=>time(),
             'owner_uid'=>$this->operate_user_id,
+            'separated_by_center'=>$separated_by_center,
+            'access_token'=>$access_token,
             );
         $id=(int)$this->input->post('id');
         if($id<=0){
@@ -194,7 +200,7 @@ class Study extends CI_Controller {
         $study_id=$id;
         //注意检测当前操作用户是否有操作study_id的权限
         $this->db
-            ->select('id,name,bias,group_count,owner_uid,from_unixtime(time) as time')
+            ->select('id,name,bias,group_count,owner_uid,separated_by_center,access_token,from_unixtime(time) as time')
             ->from('study')
             ->where('id',$id)
             ->where('owner_uid',$this->operate_user_id)
@@ -291,7 +297,7 @@ class Study extends CI_Controller {
         if(!isset($study['owner_uid']) or $study['owner_uid']!=$this->operate_user_id){
             redirect('study/');
         }
-        //删除如下表中相关数据 group,factor,layer,allocation,allocation2layer,study
+        //删除如下表中相关数据 group,factor,layer,allocation,allocation2layer,study,center
 
         //删除a2l,layer,factor 三表中相应数据
         $this->db->trans_start();
@@ -335,6 +341,10 @@ class Study extends CI_Controller {
         //echo("\nlines: ".$this->db->affected_rows()."\n\n");
 
         $this->db->delete('group',array('study_id'=>$study_id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->delete('center',array('study_id'=>$study_id));
         //echo($this->db->last_query());
         //echo("\nlines: ".$this->db->affected_rows()."\n\n");
 

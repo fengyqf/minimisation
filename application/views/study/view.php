@@ -29,6 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		  <thead>
 			<tr>
 			  <th><?php echo lang('name');?></th>
+			  <th><?php echo lang('separated_by_center');?></th>
 			  <th title="<?php echo lang('g_bias');?>"><?php echo lang('bias');?></th>
 			  <th><?php echo lang('add_time');?></th>
 			  <th><?php echo lang('g_allocations');?></th>
@@ -39,6 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php foreach($studies as $item){ ?>
 			<tr>
 			  <td><a href="<?php echo $item['detail_link']; ?>"><?php echo $item['name']; ?></a></td>
+			  <td><?php echo $item['separated_by_center']; ?></td>
 			  <td><?php echo $item['bias']; ?></td>
 			  <td><?php echo $item['time']; ?></td>
 			  <td>

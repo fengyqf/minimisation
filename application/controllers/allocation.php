@@ -20,11 +20,13 @@ class Allocation extends CI_Controller {
      */
     public function __construct(){
         parent::__construct();
+    }
 
 
+    public function _init($auto_redirect=TRUE){
         //当前操作的用户，用户id号的逻辑在 mnmssession_model 实现
         $this->load->model('mnmssession_model');
-        $this->mnmssession_model->init();
+        $this->mnmssession_model->init($auto_redirect);
         $this->operate_user_id=$this->mnmssession_model->operate_user_id;
 
         $this->load->database('default');
@@ -38,6 +40,7 @@ class Allocation extends CI_Controller {
 
 
     public function index(){
+        $this->_init();
         $study_id=(int)($this->input->get('study_id'));
         //检测权限
         $this->load->model('study_model');
@@ -93,6 +96,7 @@ class Allocation extends CI_Controller {
 
 
     public function add(){
+        $this->_init();
         $study_id=(int)($this->input->get('study_id'));
         $flash=$this->input->get('flash');      //flash消息
         //$study_id=2001;    //当前研究课题，测试阶段写死调试
@@ -154,6 +158,7 @@ class Allocation extends CI_Controller {
             }
         }
 
+        $centers=$this->study_model->get_centers($study_id);
 
         $study['groups_link']=site_url('study/group?study_id='.$study['id']);
         $study['factors_link']=site_url('factor/?study_id='.$study['id']);
@@ -174,6 +179,7 @@ class Allocation extends CI_Controller {
         $data['form_action']=site_url("/allocation/add_do");
         $data['study_id']=$study_id;
         $data['factors']=$factors;
+        $data['centers']=$centers;
         $data['flash']=$flash;
         $data=array_merge($this->data,$data);
         $this->load->view('allocation/add',$data);
@@ -181,6 +187,8 @@ class Allocation extends CI_Controller {
 
 
     public function add_do(){
+        $auto_redirect=FALSE;
+        $this->_init($auto_redirect);
         $study_id=(int)($this->input->post('study_id'));
         $allocation_name=$this->input->post('name');
         if(!$allocation_name){
@@ -190,8 +198,11 @@ class Allocation extends CI_Controller {
         $factors=$this->input->post('factors');
         //检测当前操作用户是否有操作study_id的权限
         $this->load->model('study_model');
+        $access_token_study_id=$this->study_model->get_study_id_by_access_token($this->input->post('token'));
         $study=$this->study_model->get($study_id);
-        if($this->operate_user_id!=$study['owner_uid']){
+        if($this->operate_user_id!=$study['owner_uid'] 
+            and ($access_token_study_id > 0 and $study_access_token!=$this->req_token)
+        ){
             redirect('study/');
         }else{
             $study_name=$study['name'];
@@ -199,9 +210,36 @@ class Allocation extends CI_Controller {
             $study_owner_uid=$study['owner_uid'];
             $study_bias=(int)$study['bias'];     //1-100的整数
             $study_factor_count=(int)$this->study_model->get_factor_count($study_id);
+            $study_access_token=$study['access_token'];
         }
+
+
         if( !is_array($factors) or count($factors) < $study_factor_count){
             redirect('allocation/add?study_id='.$study_id.'&flash='.lang('text_allocation_add_factor_count_error_notice'));
+        }
+        //计算中心id号，首选使用post传的id值的center，然后根据名称查询或添加
+        $center=(int)$this->input->post('center');
+        $center_input=$this->input->post('center_input');
+        if((int)$study['separated_by_center']==1){
+            //本study的所有中心centers
+            $study_centers=$this->study_model->get_centers($study_id);
+            //核实post值中心id号center是否有效
+            if($center > 0 && !isset($study_centers[$center])){
+                $center=0;
+            }
+            //无center，根据center_input查询或添加
+            if($center==0 && trim($center_input)==''){
+                redirect('allocation/add?study_id='.$study_id.'&flash='.lang('text_center_blank_error_notice'));
+            }elseif($center==0){
+                $center=$this->study_model->get_center_id_by_name($study_id,$center_input);
+                $center_name=$center_input;
+            }else{
+                $center_name=$study_centers[$center]['center_name'];
+            }
+            // assert
+            if($center==0){
+                die('Error: 算法有误，中心id号计算错误');
+            }
         }
 
         $this->db
@@ -244,6 +282,9 @@ class Allocation extends CI_Controller {
                  ->where('f.study_id',$study_id)
                  ->where_in('p2l.layer_id',$factors)
                  ->group_by(array('p.group_id','p2l.`layer_id`'));
+        if((int)$study['separated_by_center']==1){
+            $this->db->where('p.center_id',$center);
+        }
         $query=$this->db->get();
         //var_dump($this->db->last_query());
         /* 二维阵列
@@ -353,6 +394,7 @@ class Allocation extends CI_Controller {
         $this->db->trans_start();
         $data=array('name'=>$allocation_name,
                     'group_id'=>$aim_group_id,
+                    'center_id'=>$center,
                     'time'=>time(),
             );
         $this->db->insert('allocation',$data);
@@ -383,6 +425,7 @@ class Allocation extends CI_Controller {
                 'group_name'=>isset($groups[$aim_group_id]['group_name']) ? $groups[$aim_group_id]['group_name'] : 'Error: 算法错误group_name',
                 );
 
+        $data['center']=array('center_id'=>$center,'center_name'=>isset($center_name)?$center_name:'');
         $data['study']=$study;
         $data['links']['edit']=site_url("/study/edit/".$study_id);
         $data['links']['detail_link']=site_url("/study/".$study_id);
@@ -397,12 +440,17 @@ class Allocation extends CI_Controller {
         $data['link']['view']=site_url('/allocation');
         //var_dump($data);
 
-        $data=array_merge($this->data,$data);
-        $this->load->view('allocation/add_done',$data);
+        if($this->input->get('view')=='json'){
+            echo json_encode($data);
+        }else{
+            $data=array_merge($this->data,$data);
+            $this->load->view('allocation/add_done',$data);
+        }
     }
 
 
     public function correct($allocation_id){
+        $this->_init();
         $allocation_id=(int)$allocation_id;
         //检查 $allocation_id对应的study是否是当前用户所有
         $study_id=0;
@@ -435,6 +483,7 @@ class Allocation extends CI_Controller {
 
 
     public function history(){
+        $this->_init();
         $study_id=(int)($this->input->get('study_id'));
         $page=(int)($this->input->get('page'));
         $pagesize=$this->config->item('allocation_history_pagesize');
@@ -476,25 +525,15 @@ class Allocation extends CI_Controller {
         }
 
         $fl_data=array();
-        /*
-        //factor-layer data, 本study项目中的所有
-        $this->db->select('f.id as factor_id,f.name as factor_name,l.id as layer_id,l.name as layer_name')
-                 ->from('factor f')
-                 ->join('layer l','l.factor_id=f.id','inner')
-                 ->where('f.study_id',$study_id);
-        $query=$this->db->get();
-        foreach ($query->result_array() as $row) {
-            $fl_data[$row['layer_id']]=$row;
-            $fl_data[$row['layer_id']]['factors']=$def_factor_arr;
-        }
-        //var_dump($this->db->last_query());
-        //var_dump($fl_data);
-        */
 
+        //读取所有中心
+        if($study['separated_by_center']==1){
+            $study_centers=$this->study_model->get_centers($study_id);
+        }
 
         $allocations=array();
         //按分页读取相应的allocation记录，然后逐条记录 按该study的factor增加相应layer数据
-        $this->db->select('id,name,from_unixtime(time) as time,group_id')
+        $this->db->select('id,name,center_id,from_unixtime(time) as time,group_id')
                  ->from('allocation')
                  ->where_in('group_id', $groups ? array_keys($groups) : 0)
                  ->order_by('id','desc');
@@ -508,6 +547,11 @@ class Allocation extends CI_Controller {
         //var_dump($this->db->last_query());
         foreach ($query->result_array() as $row) {
             $row['group_name']=isset($groups[$row['group_id']]) ? $groups[$row['group_id']]['group_name'] : lang('unknown_group');
+            if($study['separated_by_center']==1){
+                $row['center_name']=isset($study_centers[$row['center_id']]['center_name']) ? $study_centers[$row['center_id']]['center_name'] : '';
+            }else{
+                $row['center_name']='-';
+            }
             $allocations[$row['id']]=$row;
         }
         //var_dump($allocations);

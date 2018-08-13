@@ -34,6 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		  <table class="table table-bordered">
             <tr>
               <th><?php echo lang('g_factors');?></th>
+<?php if($study['separated_by_center']==1){ ?>
+              <th><?php echo lang('g_center');?></th>
+<?php } ?>
 <?php foreach($factors as $factor){ ?>
               <th><?php echo $factor['factor_name'];?></th>
 <?php } ?>
@@ -43,6 +46,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php foreach($allocations as $allocation){ ?>
             <tr>
               <td><?php echo $allocation['name'];?></td>
+<?php if($study['separated_by_center']==1){ ?>
+              <td><?php echo $allocation['center_name'];?></td>
+<?php } ?>
 <?php	 foreach($factors as $factor){ ?>
               <td><?php echo $allocation['factors'][$factor['factor_id']];?></td>
 <?php 	} ?>

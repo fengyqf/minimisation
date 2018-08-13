@@ -6,6 +6,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <?php echo $bootstrap; ?>
 <title><?php echo lang('g_allocations');?> - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("label[for='center_input']").click(function(){
+			$("input[name='center']").attr('checked',false)
+		})
+		$("input[name='center']").click(function(){
+			$("input[name='center_input']").val('');
+		})
+	})
+</script>
+<style type="text/css">
+	#centers_container label{padding: 0 20px 0 0;}
+</style>
 </head>
 <body>
 
@@ -54,6 +67,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php } ?>
 	</fieldset>
 <?php } ?>
+<?php if($study['separated_by_center']==1) { ?>
+	<fieldset>
+		<legend><?php echo lang('g_centers');?></legend>
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-2 control-label"></label>
+			<div class="col-sm-10" id="centers_container">
+	<?php foreach($centers as $center_id => $center) { ?>
+			    <label for="center_<?php echo $center['center_id']; ?>">
+			    <input type="radio" name="center" id="center_<?php echo $center['center_id']; ?>" value="<?php echo $center['center_id'];?>">
+			    <?php echo $center['center_name'];?></label>
+	<?php 	} ?>
+			    <label for="center_input">
+			    <input type="text" name="center_input" id="center_input" value=""><?php echo lang('input_center_name');?>
+			    </label>
+			</div>
+		</div>
+		<div class="alert alert-info" role="alert"><?php echo lang('text_input_center_name');?></div>
+	</fieldset>
+<?php } ?>
+
 	<fieldset>
 		<legend><?php echo lang('layer_of_every_factor');?></legend>
 <?php foreach($factors as $factor_id => $factor){ ?>

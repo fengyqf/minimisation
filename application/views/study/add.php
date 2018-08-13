@@ -65,6 +65,10 @@ if($study['study_id']==0){
 			<dd><input type="text" name="name" id="name" value="<?php echo $study['name']; ?>"></dd>
 			<dt><?php echo lang('g_bias');?></dt>
 			<dd><input type="text" name="bias" id="bias" value="<?php echo $study['bias']; ?>"><?php echo lang('text_bias_note');?></dd>
+			<dt><?php echo lang('access_token');?></dt>
+			<dd><textarea name="access_token" id="access_token"><?php echo $study['access_token']; ?></textarea></dd>
+			<dt></dt>
+			<dd><label><input type="checkbox" name="separated_by_center" id="separated_by_center" value="1" <?php if( $study['separated_by_center']){ ?> checked="checked" <?php } ?>><?php echo lang('separated_by_center');?></label></dd>
 <?php if(1==2){ ?>
 			<dt><?php echo lang('g_groups');?></dt>
 			<dd>

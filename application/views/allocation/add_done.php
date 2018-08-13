@@ -32,6 +32,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <div class="panel-heading"><?php echo lang('allocation_add');?></div>
 	  <div class="panel-body">
 
+<?php if($study['separated_by_center'] ==1) { ?>
+		<fieldset>
+			<legend><?php echo lang('g_center');?></legend>
+			<div class="form-group">
+				<label class="col-sm-2 control-label"><?php echo $center['center_name']; ?></label>
+				<div class="col-sm-10"><?php echo $center['center_name']; ?></div>
+			</div>
+		</fieldset>
+<?php } ?>
+
 		<fieldset>
 			<legend><?php echo lang('layer_of_every_factor');?></legend>
 <?php foreach($factors as $factor){ ?>
@@ -55,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<legend><?php echo lang('aim_group');?></legend>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">&nbsp;</label>
-				<div class="col-sm-10"><?php echo $aim_group['group_name'];?></div>
+				<div class="col-sm-10" id="aim_group"><?php echo $aim_group['group_name'];?></div>
 			</div>
 		</fieldset>
 

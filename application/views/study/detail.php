@@ -31,6 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <div class="panel-heading"><?php echo lang('property');?></div>
 	  <div class="panel-body">
 		<h3><span class="label label-default"><?php echo lang('g_study_name');?></span> <?php echo $study['name']; ?></h3>
+		<h5><span class="label label-default" title="<?php echo lang('separated_by_center');?>"><?php echo lang('separated_by_center');?></span> <?php echo $study['separated_by_center']; ?></h3>
 		<h5><span class="label label-default" title="<?php echo lang('g_bias');?>"><?php echo lang('bias');?></span> <?php echo $study['bias']; ?></h3>
 		<h5><span class="label label-default"><?php echo lang('add_time');?></span> <?php echo $study['time']; ?></h5>
 		<h5><span class="label label-default"><?php echo lang('allocations_count');?></span> <a href="<?php echo site_url('allocation/?study_id='.$study['id']);?>"><?php echo $allocations_count; ?></a></h5>

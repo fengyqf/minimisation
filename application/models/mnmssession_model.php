@@ -8,13 +8,14 @@ class Mnmssession_model extends CI_Model {
     }
 
 
-    public function init(){
+    public function init($auto_redirect=TRUE){
         //do something to init the data of the operate user
-        $this->operate_user_id=7;
+        $this->load->library('session');
+        $this->operate_user_id=(int)$this->session->userdata('user_id');
 
         //not authorized operater, redirect to somewhere
-        if(!$this->operate_user_id){
-            redirect('/');
+        if($auto_redirect and !$this->operate_user_id){
+            redirect('/welcome/login');
         }
     }
 

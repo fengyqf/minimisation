@@ -21,11 +21,6 @@ class Welcome extends CI_Controller {
     public function __construct(){
         parent::__construct();
 
-        //当前操作的用户，用户id号的逻辑在 mnmssession_model 实现
-        $this->load->model('mnmssession_model');
-        $this->mnmssession_model->init();
-        $this->operate_user_id=$this->mnmssession_model->operate_user_id;
-
         $lang=$this->input->cookie('lang',TRUE);
         $this->lang->load('common',$lang);
 
@@ -52,4 +47,52 @@ class Welcome extends CI_Controller {
         $data=array_merge($this->data,$data);
 		$this->load->view('welcome_message',$data);
 	}
+
+
+    public function login()
+    {
+        $this->load->library('session');
+        $data=array();
+        $data=array_merge($this->data,$data);
+        $this->load->view('login',$data);
+    }
+
+    public function auth()
+    {
+
+        $username=$this->input->post('name',TRUE);
+        $password=$this->input->post('pass',TRUE);
+        if(!$password or !$username){
+            $this->login();
+            return;
+        }
+        $this->load->database('default');
+        $this->db
+            ->select('id')
+            ->from('user')
+            ->where('name',$username)
+            ->where('pass',$password);
+        $query=$this->db->get();
+        if ($query->num_rows() > 0){
+            $row = $query->row_array();
+            $this->load->library('session');
+            $this->session->set_userdata('user_id',$row['id']);
+            $data=array();
+            $data=array_merge($this->data,$data);
+            #$this->load->view('welcome_message',$data);
+            redirect('/welcome');
+        }else{
+            $this->login();
+            return;
+        }
+    }
+
+    public function logout(){
+        $this->load->library('session');
+        $this->session->sess_destroy();
+
+        $data=array_merge($this->data,$data);
+        $this->load->view('login',$data);
+    }
+
 }
