@@ -48,6 +48,7 @@ $lang['my_studies'] = "我的试验项目";
 $lang['username'] = "用户名";
 $lang['password'] = "密码";
 $lang['login'] = "登录";
+$lang['logout'] = "退出";
 $lang['token_generate'] = "生成 token";
 
 

@@ -18,7 +18,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <div id="body">
     <ul>
+<?php if($user_id>0){ ?>
     <li><a href="<?php echo site_url("/study/"); ?>"><?php echo lang('my_studies');?></a></li>
+    <li><a href="<?php echo site_url("/welcome/logout"); ?>"><?php echo lang('logout');?></a>
+<?php }else{ ?>
+    <li><a href="<?php echo site_url("/welcome/login"); ?>"><?php echo lang('login');?></a>
+<?php } ?>
     </ul>
     </div>
 

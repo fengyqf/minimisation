@@ -31,6 +31,8 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
+        $this->load->library('session');
+        $this->operate_user_id=(int)$this->session->userdata('user_id');
 		//set language
 		if($lang=$this->input->get('lang')){
 			if(strlen($lang)<20){
@@ -44,6 +46,7 @@ class Welcome extends CI_Controller {
 	        $this->lang->load('common',$lang);
 		}
 		$data=array();
+        $data['user_id']=$this->operate_user_id;
         $data=array_merge($this->data,$data);
 		$this->load->view('welcome_message',$data);
 	}
@@ -91,6 +94,7 @@ class Welcome extends CI_Controller {
         $this->load->library('session');
         $this->session->sess_destroy();
 
+        $data=array();
         $data=array_merge($this->data,$data);
         $this->load->view('login',$data);
     }
