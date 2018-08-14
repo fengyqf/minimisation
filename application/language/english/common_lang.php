@@ -48,6 +48,7 @@ $lang['my_studies'] = "My Studies";
 $lang['username'] = "UserName";
 $lang['password'] = "Password";
 $lang['login'] = "Login";
+$lang['token_generate'] = "Generate token";
 
 
 //study

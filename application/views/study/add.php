@@ -6,6 +6,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <?php echo $bootstrap; ?>
 <title><?php echo lang('g_allocations');?> - <?php echo $study['name']; ?> - <?php echo $site_name;?></title>
+<script type="text/javascript">
+	function randomStrCode(len) {
+	    var d,
+	        e,
+	        b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+	        c = "";
+	        for (d = 0; len > d; d += 1){
+	            e = Math.random() * b.length, e = Math.floor(e), c += b.charAt(e);
+	        }
+	        return c.toLocaleUpperCase();
+	}
+
+	$(document).ready(function(){
+		$('#token_generate').click(function(){
+			var nstr=randomStrCode(80);
+			$("#access_token").val(nstr);
+			return false;
+		});
+		$('#token_help').click(function(){
+			$('#token_note').toggle();
+			return false;
+		});
+	})
+
+</script>
 </head>
 <body>
 
@@ -66,7 +91,12 @@ if($study['study_id']==0){
 			<dt><?php echo lang('g_bias');?></dt>
 			<dd><input type="text" name="bias" id="bias" value="<?php echo $study['bias']; ?>"><?php echo lang('text_bias_note');?></dd>
 			<dt><?php echo lang('access_token');?></dt>
-			<dd><textarea name="access_token" id="access_token"><?php echo $study['access_token']; ?></textarea></dd>
+			<dd><textarea name="access_token" id="access_token" cols="40" rows="4"><?php echo $study['access_token']; ?></textarea><a href="#" id="token_generate" style="margin: 0 0 0 20px;"><?php echo lang('token_generate'); ?></a>&nbsp;<a href="#" id="token_help">?</a>
+				<div id="token_note" style="display: none;">
+					<pre>Allocation API via HTTP:
+curl -i <?php echo site_url('/allocation/add_do');?>?view=json -d 'center_input={center_code}&factors%5B{factor_id}%5D={layer_id}&study_id=<?php echo $study['study_id'];?>&name=&token=<?php echo $study['access_token']; ?>'</pre>
+				</div>
+			</dd>
 			<dt></dt>
 			<dd><label><input type="checkbox" name="separated_by_center" id="separated_by_center" value="1" <?php if( $study['separated_by_center']){ ?> checked="checked" <?php } ?>><?php echo lang('separated_by_center');?></label></dd>
 <?php if(1==2){ ?>

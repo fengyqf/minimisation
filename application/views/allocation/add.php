@@ -10,10 +10,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$(document).ready(function(){
 		$("label[for='center_input']").click(function(){
 			$("input[name='center']").attr('checked',false)
-		})
+		});
 		$("input[name='center']").click(function(){
 			$("input[name='center_input']").val('');
+		});
+		$('#token_help').click(function(){
+			$('#token_note').toggle();
+			return false;
+		});
+		$("#form1").change(function(){
+			var url="<?php echo site_url('/allocation/add_do');?>";
+			var study_id="<?php echo $study_id;?>";
+			var token="<?php echo $study['access_token']; ?>";
+			var center_name=$("input[name='center']:checked").attr('title');
+			if(center_name==undefined){
+				center_name=$("input[name='center_input']").val();
+			}
+			var str_factor='';
+			$("input:radio[name^='factors']:checked").each(function(){
+				str_factor+='&'+this.name+'='+this.value;
+			})
+			str_factor=encodeURI(str_factor);
+			var a_name=$("input:text[name='name']").val();
+			var curl="curl -i "+url+"?view=json -d 'center_input="+center_name+str_factor+"&study_id="+study_id+"&name="+a_name+"&token="+token+"'";
+			$('#token_note').html(curl);
 		})
+
 	})
 </script>
 <style type="text/css">
@@ -45,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <div class="panel-heading"><?php echo lang('allocation_add');?></div>
 	  <div class="panel-body">
 
-      <form class="form-horizontal" name="form1" method="post" action="<?php echo $form_action;?>">
+      <form class="form-horizontal" name="form1" id="form1" method="post" action="<?php echo $form_action;?>">
 <?php if(isset($flash) and $flash){ ?>
 	<div class="alert alert-warning" role="alert"><?php echo $flash; ?></div>
 <?php } ?>
@@ -75,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="col-sm-10" id="centers_container">
 	<?php foreach($centers as $center_id => $center) { ?>
 			    <label for="center_<?php echo $center['center_id']; ?>">
-			    <input type="radio" name="center" id="center_<?php echo $center['center_id']; ?>" value="<?php echo $center['center_id'];?>">
+			    <input type="radio" name="center" id="center_<?php echo $center['center_id']; ?>" value="<?php echo $center['center_id'];?>" title="<?php echo $center['center_name'];?>">
 			    <?php echo $center['center_name'];?></label>
 	<?php 	} ?>
 			    <label for="center_input">
@@ -95,7 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="col-sm-10">
 	<?php foreach($factor['layers'] as $layer){ ?>
 			    <label for="factors_<?php echo $layer['layer_id']; ?>" style="margin:0 10px 0 0;">
-			    <input type="radio" name="factors[<?php echo $factor_id; ?>]" id="factors_<?php echo $layer['layer_id']; ?>" value="<?php echo $layer['layer_id'];?>">
+			    <input type="radio" name="factors[<?php echo $factor_id; ?>]" id="factors_<?php echo $layer['layer_id']; ?>" value="<?php echo $layer['layer_id'];?>" title="<?php echo $layer['layer_name'];?>">
 			    <?php echo $layer['layer_name'];?></label>
 	<?php } ?>
 			</div>
@@ -120,6 +142,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="submit" class="btn btn-default"><?php echo lang('confirm_allocate');?></button>
+				&nbsp;<a href="#" id="token_help"><sub>api</sub></a>
 			</div>
 		</div>
 	</fieldset>
@@ -144,6 +167,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<input type="submit" name="Submit" value="<?php echo lang('confirm_allocate');?>">
 		</div>
 <?php } ?>
+		<div id="token_note" style="display: none;">
+			<pre>Allocation API via HTTP:
+</pre>
+		</div>
 
       </form>
 
