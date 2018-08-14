@@ -189,7 +189,7 @@ class Factor extends CI_Controller {
             //$this->db->trans_begin();     //test when debug
             $this->db->trans_start();
             $sql="delete a2l FROM `{$this->db->dbprefix}allocation2layer` a2l
-                 inner join {$this->db->dbprefix}layer` l on a2l.layer_id=l.id WHERE l.factor_id=?";
+                 inner join `{$this->db->dbprefix}layer` l on a2l.layer_id=l.id WHERE l.factor_id=?";
             $this->db->query($sql,array($id));
             //var_dump($this->db->last_query());
             $this->db->delete('layer',array('factor_id'=>$id));
