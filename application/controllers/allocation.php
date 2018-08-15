@@ -181,6 +181,7 @@ class Allocation extends CI_Controller {
         $data['factors']=$factors;
         $data['centers']=$centers;
         $data['flash']=$flash;
+        $data['user_agent']=$_SERVER['HTTP_USER_AGENT'];
         $data=array_merge($this->data,$data);
         $this->load->view('allocation/add',$data);
     }

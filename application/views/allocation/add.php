@@ -22,6 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			var url="<?php echo site_url('/allocation/add_do');?>";
 			var study_id="<?php echo $study_id;?>";
 			var token="<?php echo $study['access_token']; ?>";
+			var ua="<?php echo $user_agent;?>";
 			var center_name=$("input[name='center']:checked").attr('title');
 			if(center_name==undefined){
 				center_name=$("input[name='center_input']").val();
@@ -32,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			})
 			str_factor=encodeURI(str_factor);
 			var a_name=$("input:text[name='name']").val();
-			var curl="curl -i "+url+"?view=json -d 'center_input="+center_name+str_factor+"&study_id="+study_id+"&name="+a_name+"&token="+token+"'";
+			var curl="curl -i -d 'center_input="+center_name+str_factor+"&study_id="+study_id+"&name="+a_name+"&token="+token+"' -A'"+ua+"' '"+url+"?view=json'";
 			$('#token_note').html(curl);
 		})
 

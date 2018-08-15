@@ -94,7 +94,7 @@ if($study['study_id']==0){
 			<dd><textarea name="access_token" id="access_token" cols="40" rows="4"><?php echo $study['access_token']; ?></textarea><a href="#" id="token_generate" style="margin: 0 0 0 20px;"><?php echo lang('token_generate'); ?></a>&nbsp;<a href="#" id="token_help">?</a>
 				<div id="token_note" style="display: none;">
 					<pre>Allocation API via HTTP:
-curl -i <?php echo site_url('/allocation/add_do');?>?view=json -d 'center_input={center_code}&factors%5B{factor_id}%5D={layer_id}&study_id=<?php echo $study['study_id'];?>&name=&token=<?php echo $study['access_token']; ?>'</pre>
+curl -i -d 'center_input={center_code}&factors%5B{factor_id}%5D={layer_id}&study_id=<?php echo $study['study_id'];?>&name=&token=<?php echo $study['access_token']; ?>' -A "{user-agent}" <?php echo site_url('/allocation/add_do');?>?view=json</pre>
 				</div>
 			</dd>
 			<dt></dt>
