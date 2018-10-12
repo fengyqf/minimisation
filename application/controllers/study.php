@@ -353,6 +353,47 @@ class Study extends CI_Controller {
         redirect('study/');
     }
 
+    public function empty_allocation($id=NULL){
+        if(!$id){
+            $id=$this->input->get('id');
+        }
+        if(!$id){
+            $id=$this->input->get('study_id');
+        }
+        if(!$id){
+            redirect('study/');
+        }
+        $study_id=$id;
+        $this->load->model('study_model');
+        $study=$this->study_model->get($id);
+        if(!isset($study['owner_uid']) or $study['owner_uid']!=$this->operate_user_id){
+            redirect('study/');
+        }
+
+        // db trans... save as  self::del(...)
+        $this->db->trans_start();
+        $sql="delete a FROM `{$this->db->dbprefix}allocation` a
+                INNER JOIN `{$this->db->dbprefix}allocation2layer` a2l ON a.id=a2l.allocation_id
+                INNER JOIN `{$this->db->dbprefix}layer` l ON a2l.layer_id=l.id
+                INNER JOIN `{$this->db->dbprefix}factor` f ON f.id = l.factor_id
+                WHERE f.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $sql="delete a2l FROM `{$this->db->dbprefix}allocation2layer` a2l
+                INNER JOIN `{$this->db->dbprefix}layer` l ON a2l.layer_id=l.id
+                INNER JOIN `{$this->db->dbprefix}factor` f ON f.id = l.factor_id
+                WHERE f.study_id={$study_id}";
+        $this->db->query($sql,array($id));
+        //echo($this->db->last_query());
+        //echo("\nlines: ".$this->db->affected_rows()."\n\n");
+
+        $this->db->trans_complete();
+
+        redirect('allocation/?study_id=?study_id='.$study_id);
+    }
+
 
     public function group(){
         $study_id=$this->input->get('study_id');

@@ -71,6 +71,7 @@ $lang['add_more_layers'] = "+ 增加水平";
 $lang['allocations_count'] = "已分配数";
 $lang['current_allocations'] = "已录入分配项";
 $lang['allocation_add'] = "新的录入分配项";
+$lang['allocation_empty'] = "清空所有分配记录";
 $lang['layer_of_every_factor'] = "各因素水平";
 $lang['additions'] = "附加字段";
 $lang['addition_name'] = "录入分配项名称";
@@ -96,6 +97,7 @@ $lang['confirm_allocate'] = "提交，执行随机化";
 $lang['allocation_correct_notice']='该条分配数据已经被清除，请在下面重新录入。';
 $lang['allocate_time'] = "分配时间";
 $lang['text_empty_factor_allocation_exists_notice'] = "某条分配带有空白的水平，这意味着您录入过该条分配后，删除过某个分层。";
+$lang['text_allocation_empty_confirm']='真的要清空所有分配记录？';
 
 //factor
 $lang['factor_name']='因素名';

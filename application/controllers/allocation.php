@@ -614,6 +614,7 @@ class Allocation extends CI_Controller {
         $study['allocations_link']=site_url('allocation/?study_id='.$study['id']);
         $study['allocation_add_link']=site_url('allocation/add?study_id='.$study['id']);
         $study['allocation_history_link']=site_url('allocation/history?study_id='.$study['id']);
+        $study['allocation_empty_link']=site_url('study/empty_allocation?study_id='.$study['id']);
         $data['study']=$study;
         $data['factors']=$factors;
         $data['allocations']=$allocations;

@@ -66,6 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<a class="btn btn-default" href="<?php echo $study['allocation_history_link']; ?>" role="button"><span class="glyphicon glyphicon-time" aria-hidden="true"></span><?php echo lang('allocation_history');?></a>
 	<a class="btn btn-default" href="<?php echo $study['allocation_add_link']; ?>" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><?php echo lang('allocation_add');?></a>
+    <a class="btn btn-default" href="<?php echo $study['allocation_empty_link']; ?>" role="button" onClick="return confirm('<?php echo lang('text_allocation_empty_confirm');?>')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><?php echo lang('allocation_empty');?></a>
 
 
 </div>

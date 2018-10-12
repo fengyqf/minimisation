@@ -71,6 +71,7 @@ $lang['add_more_layers'] = "+ Add More";
 $lang['allocations_count'] = "Allocations Count";
 $lang['current_allocations'] = "Current Allocations";
 $lang['allocation_add'] = "Add New Allocation";
+$lang['allocation_empty'] = "Empty Allocations";
 $lang['layer_of_every_factor'] = "Layer of Every Factor";
 $lang['additions'] = "Additions";
 $lang['addition_name'] = "Name";
@@ -96,6 +97,7 @@ $lang['confirm_allocate'] = "Do Allocate";
 $lang['allocation_correct_notice']='this Allocation was cleared, input and allocate again please.';
 $lang['allocate_time'] = "Allocate Time";
 $lang['text_empty_factor_allocation_exists_notice'] = "Allocation with an empty layer, means that you deleted a factor yet. ";
+$lang['text_allocation_empty_confirm']='Empty all the Allocations in this study?';
 
 //factor
 $lang['factor_name']='Factor Name';
